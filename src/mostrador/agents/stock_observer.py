@@ -12,13 +12,13 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Any
-
 
 # ---------------------------------------------------------------------------
 # Data contracts
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class StockSignal:
@@ -27,12 +27,12 @@ class StockSignal:
     branch_id: str
     available_units: int
     target_units: int
-    coverage_days: float | None        # days of stock at current sales rate
+    coverage_days: float | None  # days of stock at current sales rate
     sold_last_window: int
     sold_equivalent_period_prior_year: int
-    yoy_growth_ratio: float | None     # None when no prior-year data
+    yoy_growth_ratio: float | None  # None when no prior-year data
     low_stock: bool
-    seasonal_spike: bool               # True when YoY growth ≥ threshold
+    seasonal_spike: bool  # True when YoY growth ≥ threshold
     active_promotion_ids: list[str]
     observed_at: str
 
@@ -49,9 +49,9 @@ class StockObservation:
 # Core observer
 # ---------------------------------------------------------------------------
 
-_LOW_STOCK_RATIO   = 0.25   # available < 25 % of target → low stock
-_COVERAGE_DAYS_MIN = 3      # fewer days cover → low stock regardless
-_SPIKE_THRESHOLD   = 1.5    # YoY ≥ 150 % = seasonal spike
+_LOW_STOCK_RATIO = 0.25  # available < 25 % of target → low stock
+_COVERAGE_DAYS_MIN = 3  # fewer days cover → low stock regardless
+_SPIKE_THRESHOLD = 1.5  # YoY ≥ 150 % = seasonal spike
 
 
 class StockObserver:
@@ -62,11 +62,9 @@ class StockObserver:
         sources must contain the same structure as operations.json:
           as_of, window_days, products, branches, stock, movements, promotions
         """
-        self.as_of: datetime = _parse_dt(sources.get("as_of", "")) or datetime.now(timezone.utc)
+        self.as_of: datetime = _parse_dt(sources.get("as_of", "")) or datetime.now(UTC)
         self.window_days: int = int(sources.get("window_days", 7))
-        self.products: dict[str, str] = {
-            p["sku"]: p["title"] for p in sources.get("products", [])
-        }
+        self.products: dict[str, str] = {p["sku"]: p["title"] for p in sources.get("products", [])}
         self.stock_rows: list[dict] = sources.get("stock", [])
         self.movements: list[dict] = sources.get("movements", [])
         self.promotions: list[dict] = sources.get("promotions", [])
@@ -75,26 +73,23 @@ class StockObserver:
     def run(self) -> StockObservation:
         window_start = self.as_of - timedelta(days=self.window_days)
         # Equivalent window one year ago (52 weeks back)
-        prior_end   = self.as_of   - timedelta(weeks=52)
+        prior_end = self.as_of - timedelta(weeks=52)
         prior_start = window_start - timedelta(weeks=52)
 
         signals: list[StockSignal] = []
         for row in self.stock_rows:
             sku, branch = row["sku"], row["branch_id"]
             available = int(row.get("available_units", 0))
-            target    = int(row.get("target_units", 1))
+            target = int(row.get("target_units", 1))
 
-            sold_now  = self._sold(sku, branch, window_start, self.as_of)
+            sold_now = self._sold(sku, branch, window_start, self.as_of)
             sold_prev = self._sold(sku, branch, prior_start, prior_end)
 
-            coverage = (
-                available * self.window_days / sold_now if sold_now > 0 else None
-            )
+            coverage = available * self.window_days / sold_now if sold_now > 0 else None
             yoy = sold_now / sold_prev if sold_prev > 0 else None
 
-            low_stock = (
-                available <= target * _LOW_STOCK_RATIO
-                or (coverage is not None and coverage <= _COVERAGE_DAYS_MIN)
+            low_stock = available <= target * _LOW_STOCK_RATIO or (
+                coverage is not None and coverage <= _COVERAGE_DAYS_MIN
             )
             seasonal_spike = yoy is not None and yoy >= _SPIKE_THRESHOLD
 
@@ -104,7 +99,8 @@ class StockObserver:
                 if p.get("sku") == sku
                 and p.get("branch_id") == branch
                 and p.get("enabled", True)
-                and _parse_dt(p.get("starts_at", "")) <= self.as_of  # type: ignore[operator]
+                and _parse_dt(p.get("starts_at", ""))
+                <= self.as_of  # type: ignore[operator]
                 < _parse_dt(p.get("ends_at", ""))  # type: ignore[operator]
             ]
 
@@ -163,6 +159,7 @@ class StockObserver:
 # ---------------------------------------------------------------------------
 # Helper
 # ---------------------------------------------------------------------------
+
 
 def _parse_dt(value: str) -> datetime | None:
     if not value:

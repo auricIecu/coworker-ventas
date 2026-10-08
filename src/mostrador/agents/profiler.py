@@ -17,10 +17,10 @@ from dataclasses import asdict, dataclass
 from datetime import datetime
 from typing import Any
 
-
 # ---------------------------------------------------------------------------
 # Data contracts
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class SkuPattern:
@@ -28,25 +28,26 @@ class SkuPattern:
     title: str
     mention_count: int
     purchase_count: int
-    last_seen: str          # ISO-8601
+    last_seen: str  # ISO-8601
     months_active: list[int]  # 1–12; repeated entries = higher frequency
 
 
 @dataclass
 class CustomerProfile:
-    customer_id: str          # opaque pseudonym — never a real name
+    customer_id: str  # opaque pseudonym — never a real name
     branch_ids: list[str]
     preferred_channel: str | None
     total_mentions: int
     total_purchases: int
     sku_patterns: list[SkuPattern]
-    seasonal_months: list[int]   # months where activity spikes
-    profile_revision: str        # sha256 of the input that generated this
+    seasonal_months: list[int]  # months where activity spikes
+    profile_revision: str  # sha256 of the input that generated this
 
 
 # ---------------------------------------------------------------------------
 # Core profiler
 # ---------------------------------------------------------------------------
+
 
 class CustomerProfiler:
     """Builds customer profiles from synthetic conversations and movements."""
@@ -60,14 +61,17 @@ class CustomerProfiler:
         """
         self.conversations: list[dict] = sources.get("conversations", [])
         self.movements: list[dict] = sources.get("movements", [])
-        self.products: dict[str, str] = {
-            p["sku"]: p["title"] for p in sources.get("products", [])
-        }
+        self.products: dict[str, str] = {p["sku"]: p["title"] for p in sources.get("products", [])}
 
     # ------------------------------------------------------------------
     def _revision(self) -> str:
         payload = json.dumps(
-            {"c": len(self.conversations), "m": len(self.movements)}, sort_keys=True
+            {
+                "conversations": self.conversations,
+                "movements": self.movements,
+                "products": self.products,
+            },
+            sort_keys=True,
         )
         return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
@@ -88,8 +92,10 @@ class CustomerProfiler:
 
         revision = self._revision()
         profiles = []
-        for cid, convs in by_customer.items():
-            profiles.append(self._build(cid, convs, sales_by_customer.get(cid, []), revision))
+        for cid in sorted(set(by_customer) | set(sales_by_customer)):
+            profiles.append(
+                self._build(cid, by_customer.get(cid, []), sales_by_customer.get(cid, []), revision)
+            )
         return profiles
 
     # ------------------------------------------------------------------
@@ -102,8 +108,9 @@ class CustomerProfiler:
     ) -> CustomerProfile:
         branches: set[str] = set()
         channels: list[str] = []
-        sku_mentions: dict[str, list[str]] = defaultdict(list)   # sku -> [iso dates]
+        sku_mentions: dict[str, list[str]] = defaultdict(list)  # sku -> [iso dates]
         sku_purchases: dict[str, int] = defaultdict(int)
+        purchase_dates: dict[str, list[str]] = defaultdict(list)
         seasonal_months: list[int] = []
 
         for conv in conversations:
@@ -120,33 +127,35 @@ class CustomerProfiler:
                 sku_mentions[sig["sku"]].append(conv.get("occurred_at", ""))
 
         for sale in sales:
+            if sale.get("branch_id"):
+                branches.add(sale["branch_id"])
             sku = sale.get("sku")
             if sku:
                 sku_purchases[sku] += int(sale.get("units", 1))
                 dt = _parse_dt(sale.get("occurred_at", ""))
                 if dt:
                     seasonal_months.append(dt.month)
-                    sku_mentions[sku].append(sale.get("occurred_at", ""))
+                    purchase_dates[sku].append(sale.get("occurred_at", ""))
 
         all_skus = set(sku_mentions) | set(sku_purchases)
         patterns = []
         for sku in all_skus:
-            dates = sku_mentions.get(sku, [])
+            dates = sku_mentions.get(sku, []) + purchase_dates.get(sku, [])
             months = [_parse_dt(d).month for d in dates if _parse_dt(d)]
             patterns.append(
                 SkuPattern(
                     sku=sku,
                     title=self.products.get(sku, sku),
-                    mention_count=len(dates),
+                    mention_count=len(sku_mentions.get(sku, [])),
                     purchase_count=sku_purchases.get(sku, 0),
                     last_seen=max(dates) if dates else "",
                     months_active=sorted(months),
                 )
             )
-        patterns.sort(key=lambda p: -(p.mention_count + p.purchase_count))
+        patterns.sort(key=lambda p: (-(p.mention_count + p.purchase_count), p.sku))
 
         preferred_channel = (
-            max(set(channels), key=channels.count) if channels else None
+            min(set(channels), key=lambda c: (-channels.count(c), c)) if channels else None
         )
 
         return CustomerProfile(
@@ -164,6 +173,7 @@ class CustomerProfiler:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _pseudonym(conv: dict) -> str:
     """Derive a stable opaque ID from branch + channel when no customer_id exists."""

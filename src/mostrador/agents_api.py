@@ -21,8 +21,6 @@ scheme as the rest of the back office.
       Full audit trail of state transitions for an insight.
 """
 
-from __future__ import annotations
-
 import json
 from dataclasses import asdict
 from importlib.resources import files
@@ -36,10 +34,10 @@ from mostrador.agents.profiler import CustomerProfile, CustomerProfiler
 from mostrador.agents.stock_observer import StockObserver
 from mostrador.domain import DomainError
 
-
 # ---------------------------------------------------------------------------
 # Request / response models
 # ---------------------------------------------------------------------------
+
 
 class AgentDecision(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -49,6 +47,7 @@ class AgentDecision(BaseModel):
 # ---------------------------------------------------------------------------
 # Data loaders
 # ---------------------------------------------------------------------------
+
 
 def _load_operations() -> dict:
     root = files("mostrador").joinpath("data/sales")
@@ -67,9 +66,7 @@ def _load_historical() -> list[dict]:
 def _load_customer_seed() -> list[dict]:
     root = files("mostrador").joinpath("data/sales")
     try:
-        data = json.loads(
-            root.joinpath("customer_profiles_seed.json").read_text(encoding="utf-8")
-        )
+        data = json.loads(root.joinpath("customer_profiles_seed.json").read_text(encoding="utf-8"))
         return data.get("customers", [])
     except (OSError, ValueError):
         return []
@@ -84,6 +81,7 @@ def _load_conversations() -> list[dict]:
 # ---------------------------------------------------------------------------
 # Router factory
 # ---------------------------------------------------------------------------
+
 
 def create_agents_router(identity_dep, insight_store: InsightStore) -> APIRouter:
     """
@@ -140,17 +138,14 @@ def create_agents_router(identity_dep, insight_store: InsightStore) -> APIRouter
         insights = auditor.run(observation, profiles)
 
         # Filter by actor's branch access
-        visible = [
-            i for i in insights
-            if i.branch_id in actor.branches
-        ]
+        visible = [i for i in insights if i.branch_id in actor.branches]
 
         return {
             "agents_run": ["profiler", "stock_observer", "auditor"],
             "profiles_built": len(profiles),
             "stock_signals": len(observation.signals),
             "insights_generated": len(visible),
-            "insights": [_insight_dict(i) for i in visible],
+            "insights": [insight_store.get(i.id) for i in visible],
         }
 
     # ------------------------------------------------------------------
@@ -194,6 +189,7 @@ def create_agents_router(identity_dep, insight_store: InsightStore) -> APIRouter
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _authorize(insight: dict, actor) -> None:
     if insight.get("branch_id") not in actor.branches:
         raise DomainError("insight_not_found", 404)
@@ -209,17 +205,19 @@ def _seed_to_conversations(customers: list[dict]) -> list[dict]:
     for c in customers:
         cid = c["customer_id"]
         for i, sig in enumerate(c.get("signals", [])):
-            convs.append({
-                "id": f"seed-conv-{cid}-{i}",
-                "customer_id": cid,
-                "branch_id": c["branch_ids"][0] if c.get("branch_ids") else None,
-                "channel": c.get("preferred_channel", "store"),
-                "occurred_at": sig["occurred_at"],
-                "messages": [
-                    {"role": "customer", "text": f"Consulta sobre {sig['sku']}"},
-                ],
-                "signals": [{"sku": sig["sku"]}],
-            })
+            convs.append(
+                {
+                    "id": f"seed-conv-{cid}-{i}",
+                    "customer_id": cid,
+                    "branch_id": c["branch_ids"][0] if c.get("branch_ids") else None,
+                    "channel": c.get("preferred_channel", "store"),
+                    "occurred_at": sig["occurred_at"],
+                    "messages": [
+                        {"role": "customer", "text": f"Consulta sobre {sig['sku']}"},
+                    ],
+                    "signals": [{"sku": sig["sku"]}],
+                }
+            )
     return convs
 
 
@@ -230,13 +228,15 @@ def _seed_to_movements(customers: list[dict]) -> list[dict]:
         cid = c["customer_id"]
         branch = c["branch_ids"][0] if c.get("branch_ids") else "unknown"
         for i, purchase in enumerate(c.get("purchases", [])):
-            movements.append({
-                "id": f"seed-sale-{cid}-{i}",
-                "customer_id": cid,
-                "sku": purchase["sku"],
-                "branch_id": branch,
-                "occurred_at": purchase["occurred_at"],
-                "kind": "sale",
-                "units": purchase.get("units", 1),
-            })
+            movements.append(
+                {
+                    "id": f"seed-sale-{cid}-{i}",
+                    "customer_id": cid,
+                    "sku": purchase["sku"],
+                    "branch_id": branch,
+                    "occurred_at": purchase["occurred_at"],
+                    "kind": "sale",
+                    "units": purchase.get("units", 1),
+                }
+            )
     return movements

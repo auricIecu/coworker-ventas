@@ -1,6 +1,8 @@
 # Contexto para continuar — Sales Coworker / Sales Back Office
 
-Actualizado: 8 de octubre de 2026. Este es el contexto vigente del proyecto.
+Actualizado: 8 de octubre de 2026. Complemento del módulo Agent HQ.
+El contexto de la bandeja principal y su integración Bedrock sigue en [CONEXT.md](CONEXT.md).
+Ambos módulos comparten autenticación, pero tienen fuentes, bandejas y decisiones separadas.
 
 ## Usuario y problema
 
@@ -28,7 +30,7 @@ Autonomía de observación y análisis no significa autonomía de ejecución.
 ## Arquitectura de tres agentes (HQ de agentes)
 
 El núcleo diferenciador del producto es un pipeline de tres agentes que trabajan
-en paralelo y se cruzan para producir insights accionables. Los tres perfiles son
+en secuencia y se cruzan para producir insights accionables. Los tres perfiles son
 fijos; puede haber más de un agente por perfil en una implementación real.
 
 ### Agente 1 — Perfilador de clientes (`agents/profiler.py`)
@@ -40,7 +42,7 @@ acumulativo por cliente pseudónimo.
 **Qué produce:**
 - Patrones de compra por SKU y presentación.
 - Canal preferido (WhatsApp, web, tienda física).
-- Meses del año con mayor actividad (estacionalidad individual).
+- Meses con actividad registrada; no prueba estadística de estacionalidad individual.
 - Afinidad de sucursal.
 
 **Lo que NO hace:** inferencia clínica, diagnóstico, ni uso de datos reales de personas.
@@ -68,17 +70,23 @@ stock (Agente 2) para generar insights accionables orientados a ventas.
 
 **Qué produce:**
 - `replenish_and_promote`: stock bajo + pico estacional → reponer primero, luego campaña.
-- `promote_available`: stock OK + pico → lanzar campaña ahora.
+- `promote_available`: stock OK + crecimiento interanual → revisar borrador de campaña.
 - `replenish_only`: stock bajo, sin pico → solo reabastecer.
-- `seasonal_alert`: pico YoY detectado, el manager debe revisar.
+- La comparación usa una ventana equivalente desplazada 52 semanas; un crecimiento
+  interanual no demuestra por sí solo estacionalidad causal ni demanda futura.
 
 **Flujo de decisión:**
 1. El Auditor genera el insight con `status=pending` y lo persiste.
 2. El manager de sucursal o zona lo revisa y aprueba o rechaza.
 3. **Si aprueba:** el Auditor ejecuta de inmediato — genera un `ExecutionRecord`
    (alerta en dashboard, borrador de campaña) y lo registra. `status=executed`.
-4. **Si rechaza:** `status=rejected`. El próximo ciclo de `run()` genera insights
-   frescos con evidencia actualizada.
+4. **Si rechaza:** `status=rejected`. Reanalizar las mismas fuentes conserva esa decisión;
+   evidencia diferente genera otro ID y requiere nueva revisión.
+
+La simulación se identifica como `execution_status=simulated`. Repetir aprobación no duplica
+el registro. Los pendientes antiguos se sustituyen al reanalizar evidencia distinta y el
+inventario obsoleto o una promoción activa impiden proponer una campaña adicional.
+Esto no modifica `/workspace`: allí aprobar sigue registrando solo intención.
 
 **Lo que NO hace:** enviar correos reales, publicar campañas, ejecutar compras ni
 despachar automáticamente ninguna propuesta vieja o sin aprobación explícita.
@@ -94,12 +102,12 @@ despachar automáticamente ninguna propuesta vieja o sin aprobación explícita.
 - `GET  /recommendations/{id}/events`
 
 ### Sales workspace (sin cambios)
-- `GET  /sales/view`
-- `POST /sales/run`
-- `POST /sales/conversations`
-- `POST /sales/burst`
-- `POST /sales/decide/{id}`
-- `GET  /sales/events/{id}`
+- `GET  /workspace`
+- `POST /workspace/analyze`
+- `POST /workspace/conversations`
+- `POST /workspace/demo/burst`
+- `POST /workspace/recommendations/{id}/decision`
+- `GET  /workspace/recommendations/{id}/events`
 
 ### Agent HQ (nuevo — rama `feature/jfede_info`)
 - `POST /agents/run` — Corre los tres agentes en secuencia y devuelve insights nuevos.
@@ -152,11 +160,11 @@ clientes, empleados ni sistemas empresariales.
 ### Lo que está simulado / pendiente
 - Conexión real a WhatsApp, SAP, ERP o cualquier sistema de Farmaenlace.
 - Envío real de correos, alertas push o publicación de campañas.
-- Extracción de SKU/sucursal de mensajes con IA en tiempo real (hoy los mensajes
-  sintéticos tienen las señales pre-etiquetadas o el `OfflineInterpreter` las infiere
-  por palabras clave).
+- Conectar Agent HQ a las interpretaciones de `/workspace`. Por ahora usa archivos
+  empaquetados y señales semilla etiquetadas; no consume el burst ni las conversaciones
+  añadidas a SQLite. Bedrock ya interpreta las conversaciones de la bandeja principal.
 - Ejecución real de compras o despacho de órdenes.
-- Interfaz de usuario (en desarrollo por el equipo de frontend).
+- Interfaz del módulo Agent HQ. La bandeja principal ya está disponible en `/`.
 - Conexión de los endpoints a fuentes autorizadas reales.
 
 ## Arranque
@@ -201,7 +209,8 @@ Norte y Quito añaden casos separados para comprobar el alcance por sucursal/zon
 El mismo escenario visto desde los tres agentes:
 
 1. El **Perfilador** detecta que `cust-anon-001` y `cust-anon-002` compraron Vitamina C
-   en octubre del año pasado y de nuevo este año → patrón estacional confirmado.
+   en octubre del año pasado y de nuevo este año → actividad observada en ambos períodos,
+   no estacionalidad estadísticamente confirmada.
 2. El **Observador** calcula que las ventas de Vitamina C en `gye-centro-demo` crecieron
    ~167% YoY (560 u. este período vs. 210 u. el año anterior) y que el stock cubre
    menos de 3 días → `low_stock=True`, `seasonal_spike=True`.
@@ -216,11 +225,11 @@ El mismo escenario visto desde los tres agentes:
 Ver [diseño](docs/design.md), [arquitectura](docs/architecture.md),
 [datos](data/backoffice/README.md) y [proveedores](docs/providers.md).
 
-1. **UI de Agent HQ** — interfaz para ver los tres agentes corriendo en paralelo,
+1. **UI de Agent HQ** — interfaz para ver los tres agentes del pipeline,
    ver perfiles de clientes, señales de stock e insights con evidencia. En desarrollo.
-2. **Extracción de señales con IA en tiempo real** — usar Bedrock para extraer SKU,
-   sucursal e intención de mensajes reales; validar contra catálogo; separar instrucciones
-   de datos.
+2. **Unificar fuentes de ambos módulos** — reutilizar interpretaciones Bedrock validadas
+   de mensajes sintéticos de `/workspace`; mantener reglas y documentos comerciales antes
+   de unificar decisiones. No introducir mensajes reales en el sandbox.
 3. **Conexión de fuentes autorizadas** — registrar cobertura, frescura y procedencia
    de cada fuente real (WhatsApp, SAP, inventario).
 4. **Evaluación contra escenarios reservados** — detectar correctamente picos, stock

@@ -19,7 +19,7 @@ packages = ["src/mostrador"]
 [tool.hatch.build.targets.sdist]
 only-include = [
   "src", "tests", "docs", "examples", "data", "pyproject.toml", "uv.lock",
-  "README.md", "CONTEXT.md", "PRODUCT.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md",
+  "README.md", "CONEXT.md", "CONTEXT.md", "PRODUCT.md", "LICENSE", "CONTRIBUTING.md", "SECURITY.md",
   "Dockerfile", ".dockerignore", ".env.example", ".gitignore", ".github",
 ]
 exclude = ["**/__pycache__", "**/*.pyc"]

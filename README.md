@@ -101,6 +101,13 @@ Una propuesta nueva necesita su propia aprobación cuando cambia la evidencia.
 
 [Pitch para el Checkpoint #1](docs/checkpoint-1.md).
 [CONEXT.md](CONEXT.md) contiene el contexto vigente y los siguientes pasos.
+[CONTEXT.md](CONTEXT.md) documenta el módulo experimental Agent HQ integrado desde
+`feature/jfede_info`: perfilador, observador de stock interanual y auditor deterministas.
+Se prueba desde `/docs` con `POST /agents/run` y `GET /agents/insights`.
+Su aprobación crea únicamente un registro simulado (`execution_status=simulated`),
+sin contactar servicios externos. La bandeja `/workspace` y Bedrock siguen intactos.
+Agent HQ aún usa fixtures separadas: no consume conversaciones añadidas ni el burst
+del workspace, y sus insights todavía no se muestran en la interfaz principal.
 [Diseño](docs/design.md), [arquitectura](docs/architecture.md),
 [contratos de datos](data/backoffice/README.md) y [conectores pendientes](docs/providers.md).
 

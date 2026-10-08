@@ -23,7 +23,7 @@ import sqlite3
 import time
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Literal
 
@@ -31,19 +31,20 @@ from mostrador.agents.profiler import CustomerProfile
 from mostrador.agents.stock_observer import StockObservation, StockSignal
 from mostrador.domain import DomainError
 
-
 # ---------------------------------------------------------------------------
 # Data contracts
 # ---------------------------------------------------------------------------
 
 InsightKind = Literal[
-    "replenish_and_promote",   # low stock + seasonal spike → restock first, then campaign
-    "promote_available",        # good stock + spike → launch campaign now
-    "replenish_only",           # low stock, no spike → just restock, no promo yet
-    "seasonal_alert",           # YoY spike detected, manager should review
+    "replenish_and_promote",  # low stock + seasonal spike → restock first, then campaign
+    "promote_available",  # good stock + spike → launch campaign now
+    "replenish_only",  # low stock, no spike → just restock, no promo yet
+    "seasonal_alert",  # YoY spike detected, manager should review
 ]
 
-InsightStatus = Literal["pending", "approved", "rejected", "executing", "executed", "failed"]
+InsightStatus = Literal[
+    "pending", "approved", "rejected", "executing", "executed", "failed", "superseded"
+]
 
 
 @dataclass
@@ -64,14 +65,14 @@ class AuditInsight:
     branch_id: str
     kind: InsightKind
     priority: Literal["high", "medium", "low"]
-    headline: str           # one-line summary for the manager UI
-    rationale: str          # evidence-based explanation
-    suggested_action: str   # concrete recommended step
-    campaign_draft: dict | None   # stub campaign if applicable
-    evidence: dict          # numbers that support the insight
+    headline: str  # one-line summary for the manager UI
+    rationale: str  # evidence-based explanation
+    suggested_action: str  # concrete recommended step
+    campaign_draft: dict | None  # stub campaign if applicable
+    evidence: dict  # numbers that support the insight
     status: InsightStatus
     created_at: str
-    expires_at: str         # insight is stale after this
+    expires_at: str  # insight is stale after this
     execution: ExecutionRecord | None = None
 
 
@@ -83,7 +84,7 @@ class AuditInsight:
 class InsightStore:
     """Persists audit insights and their decisions across requests."""
 
-    TTL_SECONDS = 900   # 15 min, matching RecommendationStore
+    TTL_SECONDS = 900  # 15 min, matching RecommendationStore
 
     def __init__(self, path: str):
         if path == ":memory:":
@@ -107,7 +108,6 @@ class InsightStore:
                     timestamp INTEGER NOT NULL
                 );
             """)
-
 
     @contextmanager
     def _connect(self):
@@ -151,31 +151,30 @@ class InsightStore:
 
     def get(self, insight_id: str) -> dict:
         with self._connect() as db:
-            row = db.execute(
-                "SELECT * FROM insights WHERE id = ?", (insight_id,)
-            ).fetchone()
+            row = db.execute("SELECT * FROM insights WHERE id = ?", (insight_id,)).fetchone()
         if row is None:
             raise DomainError("insight_not_found", 404)
-        return {**json.loads(row["payload"]), "status": row["status"],
-                "created_at": row["created_at"], "expires_at": row["expires_at"],
-                "execution_status": "not_configured" if row["status"] == "pending" else row["status"]}
+        return self._decode(row)
+
+    @staticmethod
+    def _decode(row) -> dict:
+        return {
+            **json.loads(row["payload"]),
+            "status": row["status"],
+            "created_at": row["created_at"],
+            "expires_at": row["expires_at"],
+            "execution_status": "simulated" if row["status"] == "executed" else "not_configured",
+        }
 
     def list(self, branch_ids: list[str] | None = None) -> list[dict]:
         with self._connect() as db:
-            rows = db.execute(
-                "SELECT * FROM insights ORDER BY created_at DESC"
-            ).fetchall()
+            rows = db.execute("SELECT * FROM insights ORDER BY created_at DESC").fetchall()
         result = []
         for row in rows:
             payload = json.loads(row["payload"])
-            if branch_ids and payload.get("branch_id") not in branch_ids:
+            if branch_ids is not None and payload.get("branch_id") not in branch_ids:
                 continue
-            result.append({
-                **payload,
-                "status": row["status"],
-                "created_at": row["created_at"],
-                "expires_at": row["expires_at"],
-            })
+            result.append(self._decode(row))
         return result
 
     def decide(self, insight_id: str, decision: str, actor_id: str) -> dict:
@@ -183,35 +182,34 @@ class InsightStore:
             raise DomainError("invalid_decision", 422)
         now = int(time.time())
         with self._connect() as db:
-            row = db.execute(
-                "SELECT * FROM insights WHERE id = ?", (insight_id,)
-            ).fetchone()
+            row = db.execute("SELECT * FROM insights WHERE id = ?", (insight_id,)).fetchone()
             if row is None:
                 raise DomainError("insight_not_found", 404)
             current_status = row["status"]
+            requested = "approved" if decision == "approve" else "rejected"
+            if current_status == requested or (
+                decision == "approve" and current_status == "executed"
+            ):
+                return self._decode(row)
             if current_status != "pending":
                 raise DomainError("decision_conflict", 409)
-            if now >= row["expires_at"]:
-                db.execute(
-                    "UPDATE insights SET status = 'expired' WHERE id = ?", (insight_id,)
-                )
-                self._event(db, insight_id, "expired", actor_id, now)
+            if decision == "approve" and now >= row["expires_at"]:
                 raise DomainError("insight_expired", 409)
             new_status = "approved" if decision == "approve" else "rejected"
-            db.execute(
-                "UPDATE insights SET status = ? WHERE id = ?", (new_status, insight_id)
-            )
+            db.execute("UPDATE insights SET status = ? WHERE id = ?", (new_status, insight_id))
             self._event(db, insight_id, new_status, actor_id, now)
-            return self.get(insight_id)
+        return self.get(insight_id)
 
     def record_execution(self, insight_id: str, execution: ExecutionRecord, actor_id: str) -> dict:
         now = int(time.time())
         with self._connect() as db:
-            row = db.execute(
-                "SELECT * FROM insights WHERE id = ?", (insight_id,)
-            ).fetchone()
+            row = db.execute("SELECT * FROM insights WHERE id = ?", (insight_id,)).fetchone()
             if row is None:
                 raise DomainError("insight_not_found", 404)
+            if row["status"] == "executed":
+                return self._decode(row)
+            if row["status"] != "approved":
+                raise DomainError("insight_not_approved", 409)
             payload = json.loads(row["payload"])
             payload["execution"] = asdict(execution)
             db.execute(
@@ -220,6 +218,16 @@ class InsightStore:
             )
             self._event(db, insight_id, "executed", actor_id, now)
         return self.get(insight_id)
+
+    def supersede(self, current_ids: set[str]) -> None:
+        # This pipeline scans the whole synthetic dataset, not the actor's subset.
+        with self._connect() as db:
+            for row in db.execute(
+                "SELECT id, payload FROM insights WHERE status='pending'"
+            ).fetchall():
+                if row["id"] not in current_ids:
+                    db.execute("UPDATE insights SET status='superseded' WHERE id=?", (row["id"],))
+                    self._event(db, row["id"], "superseded", "auditor-agent", int(time.time()))
 
     def events(self, insight_id: str) -> list[dict]:
         with self._connect() as db:
@@ -237,7 +245,7 @@ class InsightStore:
 # Core auditor
 # ---------------------------------------------------------------------------
 
-_SPIKE_THRESHOLD   = 1.5    # YoY ratio ≥ 1.5 = seasonal spike
+_SPIKE_THRESHOLD = 1.5  # YoY ratio ≥ 1.5 = seasonal spike
 _MIN_PROFILES_FOR_PATTERN = 2  # at least 2 customers showing the same behaviour
 
 
@@ -263,6 +271,7 @@ class Auditor:
             if insight:
                 self.store.save(insight)
                 insights.append(insight)
+        self.store.supersede({i.id for i in insights})
         return insights
 
     # ------------------------------------------------------------------
@@ -273,19 +282,23 @@ class Auditor:
         as_of_str: str,
     ) -> AuditInsight | None:
         # How many customer profiles also show this SKU active in current month?
-        as_of = _parse_dt(as_of_str) or datetime.now(timezone.utc)
+        as_of = _parse_dt(as_of_str) or datetime.now(UTC)
+        observed = _parse_dt(signal.observed_at)
+        if observed is None or not timedelta(0) <= as_of - observed <= timedelta(hours=1):
+            return None
         current_month = as_of.month
         matching_profiles = [
-            p for p in profiles
-            if any(
-                sp.sku == signal.sku and current_month in sp.months_active
-                for sp in p.sku_patterns
+            p
+            for p in profiles
+            if signal.branch_id in p.branch_ids
+            and any(
+                sp.sku == signal.sku and current_month in sp.months_active for sp in p.sku_patterns
             )
         ]
         profile_match = len(matching_profiles) >= _MIN_PROFILES_FOR_PATTERN
 
         # Determine insight kind
-        if signal.low_stock and signal.seasonal_spike:
+        if signal.low_stock and signal.seasonal_spike and not signal.active_promotion_ids:
             kind: InsightKind = "replenish_and_promote"
             priority = "high"
             headline = (
@@ -295,12 +308,13 @@ class Auditor:
             rationale = (
                 f"Stock disponible ({signal.available_units} u.) cubre solo "
                 f"{signal.coverage_days or '?'} días al ritmo actual. "
-                f"Las ventas crecieron {round((signal.yoy_growth_ratio or 1)*100-100)}% "
+                f"Las ventas crecieron {round((signal.yoy_growth_ratio or 1) * 100 - 100)}% "
                 f"vs. el mismo período del año anterior. "
                 + (
                     f"{len(matching_profiles)} perfiles de clientes muestran compras "
                     f"recurrentes de este producto en este mes. "
-                    if profile_match else ""
+                    if profile_match
+                    else ""
                 )
                 + "Prioridad: reabastecer antes de lanzar campaña."
             )
@@ -310,7 +324,7 @@ class Auditor:
             )
             campaign_draft = _campaign_stub(signal, "post_replenishment")
 
-        elif not signal.low_stock and signal.seasonal_spike:
+        elif not signal.low_stock and signal.seasonal_spike and not signal.active_promotion_ids:
             kind = "promote_available"
             priority = "medium"
             headline = (
@@ -320,10 +334,11 @@ class Auditor:
             rationale = (
                 f"Stock suficiente ({signal.available_units} u., "
                 f"cobertura {signal.coverage_days or '?'} días). "
-                f"Ventas +{round((signal.yoy_growth_ratio or 1)*100-100)}% vs. año anterior. "
+                f"Ventas +{round((signal.yoy_growth_ratio or 1) * 100 - 100)}% vs. año anterior. "
                 + (
                     f"{len(matching_profiles)} clientes con patrón estacional confirmado. "
-                    if profile_match else ""
+                    if profile_match
+                    else ""
                 )
             )
             suggested_action = (
@@ -332,15 +347,13 @@ class Auditor:
             )
             campaign_draft = _campaign_stub(signal, "immediate")
 
-        elif signal.low_stock and not signal.seasonal_spike:
+        elif signal.low_stock:
             kind = "replenish_only"
             priority = "medium"
-            headline = (
-                f"Reabastecer {signal.title} en {signal.branch_id}"
-            )
+            headline = f"Reabastecer {signal.title} en {signal.branch_id}"
             rationale = (
                 f"Stock bajo ({signal.available_units} u. de {signal.target_units} objetivo). "
-                "Sin pico estacional detectado; no se recomienda campaña en este momento."
+                "No se propone otra campaña: revisar abastecimiento y promociones vigentes."
             )
             suggested_action = "Emitir orden de reposición."
             campaign_draft = None
@@ -350,7 +363,7 @@ class Auditor:
             return None
 
         else:
-            return None   # No actionable signal
+            return None  # No actionable signal
 
         evidence = {
             "available_units": signal.available_units,
@@ -362,9 +375,12 @@ class Auditor:
             "active_promotion_ids": signal.active_promotion_ids,
             "matching_customer_profiles": len(matching_profiles),
             "observation_as_of": as_of_str,
+            "stock_observed_at": signal.observed_at,
+            "matching_profile_ids": sorted(p.customer_id for p in matching_profiles),
+            "profile_revisions": sorted(p.profile_revision for p in matching_profiles),
         }
 
-        insight_id = _insight_id(signal.sku, signal.branch_id, kind)
+        insight_id = _insight_id(signal.sku, signal.branch_id, kind, evidence)
         return AuditInsight(
             id=insight_id,
             sku=signal.sku,
@@ -379,7 +395,7 @@ class Auditor:
             evidence=evidence,
             status="pending",
             created_at=as_of_str,
-            expires_at="",   # set by InsightStore.save()
+            expires_at="",  # set by InsightStore.save()
             execution=None,
         )
 
@@ -391,6 +407,8 @@ class Auditor:
         No real external system is contacted.
         """
         insight = self.store.get(insight_id)
+        if insight.get("status") == "executed":
+            return insight
         if insight.get("status") != "approved":
             raise DomainError("insight_not_approved", 409)
 
@@ -402,11 +420,12 @@ class Auditor:
             body=(
                 f"Insight aprobado por {actor_id}.\n\n"
                 f"Acción sugerida: {insight.get('suggested_action', '')}\n\n"
-                f"Campaña borrador: {json.dumps(insight.get('campaign_draft'), ensure_ascii=False)}\n\n"
+                "Campaña borrador: "
+                f"{json.dumps(insight.get('campaign_draft'), ensure_ascii=False)}\n\n"
                 "NOTA: Este es un registro sintético de demo. "
                 "Ninguna compra, campaña ni comunicación real fue ejecutada."
             ),
-            dispatched_at=datetime.now(timezone.utc).isoformat(),
+            dispatched_at=datetime.now(UTC).isoformat(),
         )
         return self.store.record_execution(insight_id, execution, actor_id)
 
@@ -415,8 +434,9 @@ class Auditor:
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _insight_id(sku: str, branch_id: str, kind: str) -> str:
-    raw = f"{sku}:{branch_id}:{kind}"
+
+def _insight_id(sku: str, branch_id: str, kind: str, evidence: dict) -> str:
+    raw = json.dumps([sku, branch_id, kind, evidence], sort_keys=True)
     return hashlib.sha256(raw.encode()).hexdigest()[:32]
 
 
