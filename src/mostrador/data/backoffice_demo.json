@@ -1,0 +1,498 @@
+{
+  "synthetic": true,
+  "as_of": "2026-10-08T14:00:00Z",
+  "coverage_start": "2026-09-24T14:00:00Z",
+  "window_days": 7,
+  "products": [
+    {
+      "sku": "SC-001",
+      "title": "Vitamina C — producto ficticio de demo"
+    },
+    {
+      "sku": "SC-002",
+      "title": "Jabón demo 100 g"
+    },
+    {
+      "sku": "SC-003",
+      "title": "Pañuelos demo 100 unidades"
+    }
+  ],
+  "branches": [
+    {
+      "id": "gye-centro-demo",
+      "city": "Guayaquil"
+    },
+    {
+      "id": "gye-norte-demo",
+      "city": "Guayaquil"
+    },
+    {
+      "id": "uio-demo",
+      "city": "Quito"
+    }
+  ],
+  "signals": [
+    {
+      "id": "sig-001",
+      "conversation_id": "conversation-demo-001",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-002",
+      "conversation_id": "conversation-demo-002",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-003",
+      "conversation_id": "conversation-demo-003",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-004",
+      "conversation_id": "conversation-demo-004",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-005",
+      "conversation_id": "conversation-demo-005",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-006",
+      "conversation_id": "conversation-demo-006",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-007",
+      "conversation_id": "conversation-demo-007",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-008",
+      "conversation_id": "conversation-demo-008",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-009",
+      "conversation_id": "conversation-demo-009",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-010",
+      "conversation_id": "conversation-demo-010",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-011",
+      "conversation_id": "conversation-demo-011",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-012",
+      "conversation_id": "conversation-demo-012",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-013",
+      "conversation_id": "conversation-demo-013",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-014",
+      "conversation_id": "conversation-demo-014",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-015",
+      "conversation_id": "conversation-demo-015",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-016",
+      "conversation_id": "conversation-demo-016",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-017",
+      "conversation_id": "conversation-demo-017",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-018",
+      "conversation_id": "conversation-demo-018",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-002 en esta sucursal."
+    },
+    {
+      "id": "sig-019",
+      "conversation_id": "conversation-demo-019",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-020",
+      "conversation_id": "conversation-demo-020",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-021",
+      "conversation_id": "conversation-demo-021",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-022",
+      "conversation_id": "conversation-demo-022",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-023",
+      "conversation_id": "conversation-demo-023",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-024",
+      "conversation_id": "conversation-demo-024",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-025",
+      "conversation_id": "conversation-demo-025",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-026",
+      "conversation_id": "conversation-demo-026",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-003 en esta sucursal."
+    },
+    {
+      "id": "sig-001-gye-norte-demo",
+      "conversation_id": "conversation-demo-001-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-002-gye-norte-demo",
+      "conversation_id": "conversation-demo-002-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-003-gye-norte-demo",
+      "conversation_id": "conversation-demo-003-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-004-gye-norte-demo",
+      "conversation_id": "conversation-demo-004-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-005-gye-norte-demo",
+      "conversation_id": "conversation-demo-005-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-006-gye-norte-demo",
+      "conversation_id": "conversation-demo-006-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-007-gye-norte-demo",
+      "conversation_id": "conversation-demo-007-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-008-gye-norte-demo",
+      "conversation_id": "conversation-demo-008-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-009-gye-norte-demo",
+      "conversation_id": "conversation-demo-009-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-010-gye-norte-demo",
+      "conversation_id": "conversation-demo-010-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-001-uio-demo",
+      "conversation_id": "conversation-demo-001-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-002-uio-demo",
+      "conversation_id": "conversation-demo-002-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-003-uio-demo",
+      "conversation_id": "conversation-demo-003-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-004-uio-demo",
+      "conversation_id": "conversation-demo-004-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-005-uio-demo",
+      "conversation_id": "conversation-demo-005-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-006-uio-demo",
+      "conversation_id": "conversation-demo-006-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-007-uio-demo",
+      "conversation_id": "conversation-demo-007-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-008-uio-demo",
+      "conversation_id": "conversation-demo-008-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-07T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-009-uio-demo",
+      "conversation_id": "conversation-demo-009-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    },
+    {
+      "id": "sig-010-uio-demo",
+      "conversation_id": "conversation-demo-010-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-09-28T12:00:00Z",
+      "message": "Consulta ficticia sobre disponibilidad del producto SC-001 en esta sucursal."
+    }
+  ],
+  "movements": [
+    {
+      "id": "sale-SC-001",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 560
+    },
+    {
+      "id": "sale-SC-002",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 14
+    },
+    {
+      "id": "sale-SC-003",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 14
+    },
+    {
+      "id": "sale-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 35
+    },
+    {
+      "id": "sale-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 35
+    }
+  ],
+  "stock": [
+    {
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 180,
+      "target_units": 680,
+      "reference_units": 1000
+    },
+    {
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 80,
+      "target_units": 100,
+      "reference_units": 100
+    },
+    {
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 80,
+      "target_units": 100,
+      "reference_units": 100
+    },
+    {
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 80,
+      "reference_units": 100,
+      "target_units": 100
+    },
+    {
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 20,
+      "reference_units": 100,
+      "target_units": 100
+    }
+  ],
+  "promotions": [
+    {
+      "id": "promo-demo-001",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "starts_at": "2026-10-01T14:00:00Z",
+      "ends_at": "2026-10-15T14:00:00Z",
+      "enabled": true
+    }
+  ]
+}

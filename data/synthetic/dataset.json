@@ -1,0 +1,4841 @@
+{
+  "metadata": {
+    "schema_version": "1.0.0",
+    "dataset_id": "synthetic-mostrador-v1",
+    "synthetic": true,
+    "as_of": "2026-10-08T14:00:00Z",
+    "timezone": "UTC",
+    "currency": "USD",
+    "license": "MIT",
+    "provenance": "Creado desde cero; sin fuentes, marcas, personas ni sistemas reales.",
+    "purpose": "Fixtures comerciales; no consejo clínico ni datos de Farmaenlace.",
+    "runtime_integration": "not_loaded_by_existing_api"
+  },
+  "business_rules": {
+    "quantity": {
+      "type": "integer",
+      "min": 1,
+      "max": 10000,
+      "unit": "product.sell_unit",
+      "split_packages": false
+    },
+    "money": {
+      "unit": "cent",
+      "currency": "USD",
+      "rounding": "half_up",
+      "tax_model": "final_demo_price_no_additional_tax",
+      "discount_order": "price_list_then_selected_promotions_by_priority",
+      "round_per": "promotion_per_line"
+    },
+    "price_list": {
+      "default": "general",
+      "requires_active_membership": [
+        "club",
+        "alianza"
+      ],
+      "fallback_on_expired_membership": "general",
+      "selection": "explicit_customer_segment_not_spend_inference"
+    },
+    "validity": {
+      "start_inclusive": true,
+      "end_exclusive": true
+    },
+    "inventory": {
+      "available_formula": "on_hand - reserved",
+      "max_age_seconds": 900,
+      "stale_policy": "refresh_before_promising_availability"
+    },
+    "reservation": {
+      "proposal_ttl_seconds": 300,
+      "hold_ttl_seconds": 3600,
+      "requires_human_approval": true,
+      "pickup_only": true,
+      "recheck_stock_and_price": true,
+      "automatic_retry_uncertain": false,
+      "idempotency_scope": "actor_and_request_key",
+      "provider_operation_key": "proposal_id"
+    },
+    "promotion": {
+      "selection": "explicit_not_automatically_best_price",
+      "combination": "all_pairs_must_allow_each_other",
+      "minimum_subtotal_basis": "price_list_total_before_promotions",
+      "buy_x_pay_y": "complete_groups_only_same_sku_sale_units",
+      "max_discount": "remaining_line_total"
+    },
+    "customer": {
+      "identity": "synthetic_customer_id_only",
+      "history_authorization": "staff_customer_lookup_required_before_use",
+      "clinical_inference": "forbidden"
+    }
+  },
+  "categories": [
+    {
+      "category_id": "curacion",
+      "label": "Insumos de curación demo"
+    },
+    {
+      "category_id": "cabello",
+      "label": "Cuidado del cabello demo"
+    },
+    {
+      "category_id": "higiene",
+      "label": "Higiene demo"
+    },
+    {
+      "category_id": "oral",
+      "label": "Higiene oral demo"
+    },
+    {
+      "category_id": "cuidado_personal",
+      "label": "Cuidado personal demo"
+    },
+    {
+      "category_id": "accesorios",
+      "label": "Accesorios demo"
+    }
+  ],
+  "branches": [
+    {
+      "branch_id": "centro",
+      "name": "Sucursal demo Centro",
+      "pickup_enabled": true,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "branch_id": "norte",
+      "name": "Sucursal demo Norte",
+      "pickup_enabled": true,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "branch_id": "sur",
+      "name": "Sucursal demo Sur",
+      "pickup_enabled": true,
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "products": [
+    {
+      "sku": "DEMO-001",
+      "name": "Gasas demo",
+      "category_id": "curacion",
+      "presentation": "10 unidades",
+      "sell_unit": "paquete",
+      "content_quantity": 10,
+      "content_unit": "unidad",
+      "aliases": [
+        "gasas"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-002",
+      "name": "Shampoo demo",
+      "category_id": "cabello",
+      "presentation": "250 ml",
+      "sell_unit": "frasco",
+      "content_quantity": 250,
+      "content_unit": "ml",
+      "aliases": [
+        "shampoo"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-003",
+      "name": "Jabón demo",
+      "category_id": "higiene",
+      "presentation": "100 g",
+      "sell_unit": "unidad",
+      "content_quantity": 100,
+      "content_unit": "g",
+      "aliases": [
+        "jabón"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-004",
+      "name": "Gasas demo",
+      "category_id": "curacion",
+      "presentation": "20 unidades",
+      "sell_unit": "paquete",
+      "content_quantity": 20,
+      "content_unit": "unidad",
+      "aliases": [
+        "gasas"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-005",
+      "name": "Venda demo",
+      "category_id": "curacion",
+      "presentation": "5 cm x 5 m",
+      "sell_unit": "rollo",
+      "content_quantity": 1,
+      "content_unit": "rollo",
+      "aliases": [
+        "venda"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-006",
+      "name": "Venda demo",
+      "category_id": "curacion",
+      "presentation": "10 cm x 5 m",
+      "sell_unit": "rollo",
+      "content_quantity": 1,
+      "content_unit": "rollo",
+      "aliases": [
+        "venda"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-007",
+      "name": "Algodón demo",
+      "category_id": "curacion",
+      "presentation": "50 g",
+      "sell_unit": "bolsa",
+      "content_quantity": 50,
+      "content_unit": "g",
+      "aliases": [
+        "algodón"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-008",
+      "name": "Algodón demo",
+      "category_id": "curacion",
+      "presentation": "100 g",
+      "sell_unit": "bolsa",
+      "content_quantity": 100,
+      "content_unit": "g",
+      "aliases": [
+        "algodón"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-009",
+      "name": "Cinta de papel demo",
+      "category_id": "curacion",
+      "presentation": "1,25 cm x 9 m",
+      "sell_unit": "rollo",
+      "content_quantity": 1,
+      "content_unit": "rollo",
+      "aliases": [
+        "cinta de papel"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-010",
+      "name": "Curitas demo",
+      "category_id": "curacion",
+      "presentation": "20 unidades",
+      "sell_unit": "caja",
+      "content_quantity": 20,
+      "content_unit": "unidad",
+      "aliases": [
+        "curitas"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-011",
+      "name": "Shampoo demo",
+      "category_id": "cabello",
+      "presentation": "500 ml",
+      "sell_unit": "frasco",
+      "content_quantity": 500,
+      "content_unit": "ml",
+      "aliases": [
+        "shampoo"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-012",
+      "name": "Acondicionador demo",
+      "category_id": "cabello",
+      "presentation": "250 ml",
+      "sell_unit": "frasco",
+      "content_quantity": 250,
+      "content_unit": "ml",
+      "aliases": [
+        "acondicionador"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-013",
+      "name": "Jabón líquido demo",
+      "category_id": "higiene",
+      "presentation": "250 ml",
+      "sell_unit": "frasco",
+      "content_quantity": 250,
+      "content_unit": "ml",
+      "aliases": [
+        "jabón líquido"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-014",
+      "name": "Jabón líquido demo",
+      "category_id": "higiene",
+      "presentation": "500 ml",
+      "sell_unit": "frasco",
+      "content_quantity": 500,
+      "content_unit": "ml",
+      "aliases": [
+        "jabón líquido"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-015",
+      "name": "Gel de ducha demo",
+      "category_id": "higiene",
+      "presentation": "400 ml",
+      "sell_unit": "frasco",
+      "content_quantity": 400,
+      "content_unit": "ml",
+      "aliases": [
+        "gel de ducha"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-016",
+      "name": "Cepillo dental demo",
+      "category_id": "oral",
+      "presentation": "1 unidad suave",
+      "sell_unit": "unidad",
+      "content_quantity": 1,
+      "content_unit": "unidad",
+      "aliases": [
+        "cepillo dental"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-017",
+      "name": "Cepillo dental demo",
+      "category_id": "oral",
+      "presentation": "2 unidades suaves",
+      "sell_unit": "paquete",
+      "content_quantity": 2,
+      "content_unit": "unidad",
+      "aliases": [
+        "cepillo dental"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-018",
+      "name": "Pasta dental demo",
+      "category_id": "oral",
+      "presentation": "90 g",
+      "sell_unit": "tubo",
+      "content_quantity": 90,
+      "content_unit": "g",
+      "aliases": [
+        "pasta dental"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-019",
+      "name": "Pasta dental demo",
+      "category_id": "oral",
+      "presentation": "150 g",
+      "sell_unit": "tubo",
+      "content_quantity": 150,
+      "content_unit": "g",
+      "aliases": [
+        "pasta dental"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-020",
+      "name": "Hilo dental demo",
+      "category_id": "oral",
+      "presentation": "50 m",
+      "sell_unit": "dispensador",
+      "content_quantity": 50,
+      "content_unit": "m",
+      "aliases": [
+        "hilo dental"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-021",
+      "name": "Toallitas demo",
+      "category_id": "cuidado_personal",
+      "presentation": "40 unidades",
+      "sell_unit": "paquete",
+      "content_quantity": 40,
+      "content_unit": "unidad",
+      "aliases": [
+        "toallitas"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-022",
+      "name": "Toallitas demo",
+      "category_id": "cuidado_personal",
+      "presentation": "80 unidades",
+      "sell_unit": "paquete",
+      "content_quantity": 80,
+      "content_unit": "unidad",
+      "aliases": [
+        "toallitas"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-023",
+      "name": "Pañuelos demo",
+      "category_id": "cuidado_personal",
+      "presentation": "100 unidades",
+      "sell_unit": "caja",
+      "content_quantity": 100,
+      "content_unit": "unidad",
+      "aliases": [
+        "pañuelos"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-024",
+      "name": "Discos de algodón demo",
+      "category_id": "cuidado_personal",
+      "presentation": "80 unidades",
+      "sell_unit": "paquete",
+      "content_quantity": 80,
+      "content_unit": "unidad",
+      "aliases": [
+        "discos de algodón"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-025",
+      "name": "Crema de manos demo",
+      "category_id": "cuidado_personal",
+      "presentation": "75 ml",
+      "sell_unit": "tubo",
+      "content_quantity": 75,
+      "content_unit": "ml",
+      "aliases": [
+        "crema de manos"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-026",
+      "name": "Peine demo",
+      "category_id": "accesorios",
+      "presentation": "1 unidad",
+      "sell_unit": "unidad",
+      "content_quantity": 1,
+      "content_unit": "unidad",
+      "aliases": [
+        "peine"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-027",
+      "name": "Estuche de viaje demo",
+      "category_id": "accesorios",
+      "presentation": "1 unidad",
+      "sell_unit": "unidad",
+      "content_quantity": 1,
+      "content_unit": "unidad",
+      "aliases": [
+        "estuche de viaje"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-028",
+      "name": "Esponja de baño demo",
+      "category_id": "accesorios",
+      "presentation": "1 unidad",
+      "sell_unit": "unidad",
+      "content_quantity": 1,
+      "content_unit": "unidad",
+      "aliases": [
+        "esponja de baño"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-029",
+      "name": "Guantes demo",
+      "category_id": "accesorios",
+      "presentation": "10 unidades talla M",
+      "sell_unit": "caja",
+      "content_quantity": 10,
+      "content_unit": "unidad",
+      "aliases": [
+        "guantes"
+      ],
+      "active": true,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-030",
+      "name": "Neceser demo retirado",
+      "category_id": "accesorios",
+      "presentation": "1 unidad",
+      "sell_unit": "unidad",
+      "content_quantity": 1,
+      "content_unit": "unidad",
+      "aliases": [
+        "neceser demo retirado"
+      ],
+      "active": false,
+      "clinical_use": "not_provided",
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "price_lists": [
+    {
+      "price_list_id": "general",
+      "label": "Lista ficticia general",
+      "retail_factor_basis_points": 10000,
+      "currency": "USD"
+    },
+    {
+      "price_list_id": "club",
+      "label": "Lista ficticia club",
+      "retail_factor_basis_points": 9500,
+      "currency": "USD"
+    },
+    {
+      "price_list_id": "alianza",
+      "label": "Lista ficticia alianza",
+      "retail_factor_basis_points": 9000,
+      "currency": "USD"
+    }
+  ],
+  "prices": [
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-001",
+      "unit_price_cents": 350,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-002",
+      "unit_price_cents": 625,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-003",
+      "unit_price_cents": 180,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-004",
+      "unit_price_cents": 600,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-005",
+      "unit_price_cents": 450,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-006",
+      "unit_price_cents": 725,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-007",
+      "unit_price_cents": 225,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-008",
+      "unit_price_cents": 390,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-009",
+      "unit_price_cents": 310,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-010",
+      "unit_price_cents": 480,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-011",
+      "unit_price_cents": 1090,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-012",
+      "unit_price_cents": 650,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-013",
+      "unit_price_cents": 420,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-014",
+      "unit_price_cents": 750,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-015",
+      "unit_price_cents": 810,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-016",
+      "unit_price_cents": 290,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-017",
+      "unit_price_cents": 510,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-018",
+      "unit_price_cents": 380,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-019",
+      "unit_price_cents": 560,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-020",
+      "unit_price_cents": 430,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-021",
+      "unit_price_cents": 520,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-022",
+      "unit_price_cents": 890,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-023",
+      "unit_price_cents": 270,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-024",
+      "unit_price_cents": 395,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-025",
+      "unit_price_cents": 610,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-026",
+      "unit_price_cents": 240,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-027",
+      "unit_price_cents": 990,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-028",
+      "unit_price_cents": 330,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-029",
+      "unit_price_cents": 690,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "general",
+      "sku": "DEMO-030",
+      "unit_price_cents": 1200,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-001",
+      "unit_price_cents": 333,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-002",
+      "unit_price_cents": 594,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-003",
+      "unit_price_cents": 171,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-004",
+      "unit_price_cents": 570,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-005",
+      "unit_price_cents": 428,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-006",
+      "unit_price_cents": 689,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-007",
+      "unit_price_cents": 214,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-008",
+      "unit_price_cents": 371,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-009",
+      "unit_price_cents": 295,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-010",
+      "unit_price_cents": 456,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-011",
+      "unit_price_cents": 1036,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-012",
+      "unit_price_cents": 618,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-013",
+      "unit_price_cents": 399,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-014",
+      "unit_price_cents": 713,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-015",
+      "unit_price_cents": 770,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-016",
+      "unit_price_cents": 276,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-017",
+      "unit_price_cents": 485,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-018",
+      "unit_price_cents": 361,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-019",
+      "unit_price_cents": 532,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-020",
+      "unit_price_cents": 409,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-021",
+      "unit_price_cents": 494,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-022",
+      "unit_price_cents": 846,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-023",
+      "unit_price_cents": 257,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-024",
+      "unit_price_cents": 375,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-025",
+      "unit_price_cents": 580,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-026",
+      "unit_price_cents": 228,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-027",
+      "unit_price_cents": 941,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-028",
+      "unit_price_cents": 314,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-029",
+      "unit_price_cents": 656,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "club",
+      "sku": "DEMO-030",
+      "unit_price_cents": 1140,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-001",
+      "unit_price_cents": 315,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-002",
+      "unit_price_cents": 563,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-003",
+      "unit_price_cents": 162,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-004",
+      "unit_price_cents": 540,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-005",
+      "unit_price_cents": 405,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-006",
+      "unit_price_cents": 653,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-007",
+      "unit_price_cents": 203,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-008",
+      "unit_price_cents": 351,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-009",
+      "unit_price_cents": 279,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-010",
+      "unit_price_cents": 432,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-011",
+      "unit_price_cents": 981,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-012",
+      "unit_price_cents": 585,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-013",
+      "unit_price_cents": 378,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-014",
+      "unit_price_cents": 675,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-015",
+      "unit_price_cents": 729,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-016",
+      "unit_price_cents": 261,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-017",
+      "unit_price_cents": 459,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-018",
+      "unit_price_cents": 342,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-019",
+      "unit_price_cents": 504,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-020",
+      "unit_price_cents": 387,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-021",
+      "unit_price_cents": 468,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-022",
+      "unit_price_cents": 801,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-023",
+      "unit_price_cents": 243,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-024",
+      "unit_price_cents": 356,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-025",
+      "unit_price_cents": 549,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-026",
+      "unit_price_cents": 216,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-027",
+      "unit_price_cents": 891,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-028",
+      "unit_price_cents": 297,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-029",
+      "unit_price_cents": 621,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "price_list_id": "alianza",
+      "sku": "DEMO-030",
+      "unit_price_cents": 1080,
+      "currency": "USD",
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "version": 1,
+      "updated_at": "2026-09-01T00:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "inventory": [
+    {
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "on_hand": 8,
+      "reserved": 2,
+      "available": 6,
+      "version": 2,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-001",
+      "branch_id": "norte",
+      "on_hand": 20,
+      "reserved": 0,
+      "available": 20,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-001",
+      "branch_id": "sur",
+      "on_hand": 3,
+      "reserved": 0,
+      "available": 3,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-002",
+      "branch_id": "centro",
+      "on_hand": 0,
+      "reserved": 0,
+      "available": 0,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-002",
+      "branch_id": "norte",
+      "on_hand": 9,
+      "reserved": 0,
+      "available": 9,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-002",
+      "branch_id": "sur",
+      "on_hand": 3,
+      "reserved": 0,
+      "available": 3,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-003",
+      "branch_id": "centro",
+      "on_hand": 29,
+      "reserved": 0,
+      "available": 29,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-003",
+      "branch_id": "norte",
+      "on_hand": 9,
+      "reserved": 3,
+      "available": 6,
+      "version": 2,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-003",
+      "branch_id": "sur",
+      "on_hand": 14,
+      "reserved": 0,
+      "available": 14,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-004",
+      "branch_id": "centro",
+      "on_hand": 11,
+      "reserved": 0,
+      "available": 11,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-004",
+      "branch_id": "norte",
+      "on_hand": 16,
+      "reserved": 0,
+      "available": 16,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-004",
+      "branch_id": "sur",
+      "on_hand": 21,
+      "reserved": 0,
+      "available": 21,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-005",
+      "branch_id": "centro",
+      "on_hand": 18,
+      "reserved": 0,
+      "available": 18,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-005",
+      "branch_id": "norte",
+      "on_hand": 23,
+      "reserved": 0,
+      "available": 23,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-005",
+      "branch_id": "sur",
+      "on_hand": 28,
+      "reserved": 0,
+      "available": 28,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-006",
+      "branch_id": "centro",
+      "on_hand": 25,
+      "reserved": 0,
+      "available": 25,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-006",
+      "branch_id": "norte",
+      "on_hand": 30,
+      "reserved": 0,
+      "available": 30,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-006",
+      "branch_id": "sur",
+      "on_hand": 10,
+      "reserved": 0,
+      "available": 10,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-007",
+      "branch_id": "centro",
+      "on_hand": 32,
+      "reserved": 0,
+      "available": 32,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-007",
+      "branch_id": "norte",
+      "on_hand": 12,
+      "reserved": 0,
+      "available": 12,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-007",
+      "branch_id": "sur",
+      "on_hand": 17,
+      "reserved": 0,
+      "available": 17,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-008",
+      "branch_id": "centro",
+      "on_hand": 14,
+      "reserved": 0,
+      "available": 14,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-008",
+      "branch_id": "norte",
+      "on_hand": 19,
+      "reserved": 0,
+      "available": 19,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-008",
+      "branch_id": "sur",
+      "on_hand": 24,
+      "reserved": 0,
+      "available": 24,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-009",
+      "branch_id": "centro",
+      "on_hand": 21,
+      "reserved": 0,
+      "available": 21,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-009",
+      "branch_id": "norte",
+      "on_hand": 26,
+      "reserved": 0,
+      "available": 26,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-009",
+      "branch_id": "sur",
+      "on_hand": 31,
+      "reserved": 0,
+      "available": 31,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-010",
+      "branch_id": "centro",
+      "on_hand": 28,
+      "reserved": 0,
+      "available": 28,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-010",
+      "branch_id": "norte",
+      "on_hand": 8,
+      "reserved": 0,
+      "available": 8,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-010",
+      "branch_id": "sur",
+      "on_hand": 13,
+      "reserved": 0,
+      "available": 13,
+      "version": 1,
+      "observed_at": "2026-10-07T14:00:00Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-011",
+      "branch_id": "centro",
+      "on_hand": 10,
+      "reserved": 0,
+      "available": 10,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-011",
+      "branch_id": "norte",
+      "on_hand": 15,
+      "reserved": 0,
+      "available": 15,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-011",
+      "branch_id": "sur",
+      "on_hand": 20,
+      "reserved": 0,
+      "available": 20,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-012",
+      "branch_id": "centro",
+      "on_hand": 17,
+      "reserved": 0,
+      "available": 17,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-012",
+      "branch_id": "norte",
+      "on_hand": 22,
+      "reserved": 0,
+      "available": 22,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-012",
+      "branch_id": "sur",
+      "on_hand": 27,
+      "reserved": 0,
+      "available": 27,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-013",
+      "branch_id": "centro",
+      "on_hand": 24,
+      "reserved": 0,
+      "available": 24,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-013",
+      "branch_id": "norte",
+      "on_hand": 29,
+      "reserved": 0,
+      "available": 29,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-013",
+      "branch_id": "sur",
+      "on_hand": 9,
+      "reserved": 0,
+      "available": 9,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-014",
+      "branch_id": "centro",
+      "on_hand": 31,
+      "reserved": 0,
+      "available": 31,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-014",
+      "branch_id": "norte",
+      "on_hand": 11,
+      "reserved": 0,
+      "available": 11,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-014",
+      "branch_id": "sur",
+      "on_hand": 16,
+      "reserved": 0,
+      "available": 16,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-015",
+      "branch_id": "centro",
+      "on_hand": 13,
+      "reserved": 0,
+      "available": 13,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-015",
+      "branch_id": "norte",
+      "on_hand": 18,
+      "reserved": 0,
+      "available": 18,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-015",
+      "branch_id": "sur",
+      "on_hand": 23,
+      "reserved": 0,
+      "available": 23,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-016",
+      "branch_id": "centro",
+      "on_hand": 20,
+      "reserved": 0,
+      "available": 20,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-016",
+      "branch_id": "norte",
+      "on_hand": 25,
+      "reserved": 0,
+      "available": 25,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-016",
+      "branch_id": "sur",
+      "on_hand": 30,
+      "reserved": 0,
+      "available": 30,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-017",
+      "branch_id": "centro",
+      "on_hand": 27,
+      "reserved": 0,
+      "available": 27,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-017",
+      "branch_id": "norte",
+      "on_hand": 32,
+      "reserved": 0,
+      "available": 32,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-017",
+      "branch_id": "sur",
+      "on_hand": 12,
+      "reserved": 0,
+      "available": 12,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-018",
+      "branch_id": "centro",
+      "on_hand": 9,
+      "reserved": 0,
+      "available": 9,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-018",
+      "branch_id": "norte",
+      "on_hand": 14,
+      "reserved": 0,
+      "available": 14,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-018",
+      "branch_id": "sur",
+      "on_hand": 19,
+      "reserved": 0,
+      "available": 19,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-019",
+      "branch_id": "centro",
+      "on_hand": 16,
+      "reserved": 0,
+      "available": 16,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-019",
+      "branch_id": "norte",
+      "on_hand": 21,
+      "reserved": 0,
+      "available": 21,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-019",
+      "branch_id": "sur",
+      "on_hand": 26,
+      "reserved": 0,
+      "available": 26,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-020",
+      "branch_id": "centro",
+      "on_hand": 23,
+      "reserved": 0,
+      "available": 23,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-020",
+      "branch_id": "norte",
+      "on_hand": 28,
+      "reserved": 0,
+      "available": 28,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-020",
+      "branch_id": "sur",
+      "on_hand": 8,
+      "reserved": 0,
+      "available": 8,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-021",
+      "branch_id": "centro",
+      "on_hand": 30,
+      "reserved": 0,
+      "available": 30,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-021",
+      "branch_id": "norte",
+      "on_hand": 10,
+      "reserved": 0,
+      "available": 10,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-021",
+      "branch_id": "sur",
+      "on_hand": 15,
+      "reserved": 0,
+      "available": 15,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-022",
+      "branch_id": "centro",
+      "on_hand": 12,
+      "reserved": 0,
+      "available": 12,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-022",
+      "branch_id": "norte",
+      "on_hand": 17,
+      "reserved": 0,
+      "available": 17,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-022",
+      "branch_id": "sur",
+      "on_hand": 22,
+      "reserved": 0,
+      "available": 22,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-023",
+      "branch_id": "centro",
+      "on_hand": 19,
+      "reserved": 0,
+      "available": 19,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-023",
+      "branch_id": "norte",
+      "on_hand": 24,
+      "reserved": 0,
+      "available": 24,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-023",
+      "branch_id": "sur",
+      "on_hand": 29,
+      "reserved": 0,
+      "available": 29,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-024",
+      "branch_id": "centro",
+      "on_hand": 26,
+      "reserved": 0,
+      "available": 26,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-024",
+      "branch_id": "norte",
+      "on_hand": 31,
+      "reserved": 0,
+      "available": 31,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-024",
+      "branch_id": "sur",
+      "on_hand": 11,
+      "reserved": 0,
+      "available": 11,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-025",
+      "branch_id": "centro",
+      "on_hand": 8,
+      "reserved": 0,
+      "available": 8,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-025",
+      "branch_id": "norte",
+      "on_hand": 13,
+      "reserved": 0,
+      "available": 13,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-025",
+      "branch_id": "sur",
+      "on_hand": 18,
+      "reserved": 0,
+      "available": 18,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-026",
+      "branch_id": "centro",
+      "on_hand": 15,
+      "reserved": 0,
+      "available": 15,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-026",
+      "branch_id": "norte",
+      "on_hand": 20,
+      "reserved": 0,
+      "available": 20,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-026",
+      "branch_id": "sur",
+      "on_hand": 25,
+      "reserved": 0,
+      "available": 25,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-027",
+      "branch_id": "centro",
+      "on_hand": 22,
+      "reserved": 0,
+      "available": 22,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-027",
+      "branch_id": "norte",
+      "on_hand": 27,
+      "reserved": 0,
+      "available": 27,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-027",
+      "branch_id": "sur",
+      "on_hand": 32,
+      "reserved": 0,
+      "available": 32,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-028",
+      "branch_id": "centro",
+      "on_hand": 29,
+      "reserved": 0,
+      "available": 29,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-028",
+      "branch_id": "norte",
+      "on_hand": 9,
+      "reserved": 0,
+      "available": 9,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-028",
+      "branch_id": "sur",
+      "on_hand": 14,
+      "reserved": 0,
+      "available": 14,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-029",
+      "branch_id": "centro",
+      "on_hand": 0,
+      "reserved": 0,
+      "available": 0,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-029",
+      "branch_id": "norte",
+      "on_hand": 0,
+      "reserved": 0,
+      "available": 0,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-029",
+      "branch_id": "sur",
+      "on_hand": 0,
+      "reserved": 0,
+      "available": 0,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-030",
+      "branch_id": "centro",
+      "on_hand": 0,
+      "reserved": 0,
+      "available": 0,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-030",
+      "branch_id": "norte",
+      "on_hand": 0,
+      "reserved": 0,
+      "available": 0,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "sku": "DEMO-030",
+      "branch_id": "sur",
+      "on_hand": 0,
+      "reserved": 0,
+      "available": 0,
+      "version": 1,
+      "observed_at": "2026-10-08T13:59:50Z",
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "customers": [
+    {
+      "customer_id": "DEMO-C001",
+      "display_name": "Cliente ficticio 001",
+      "segment": "club",
+      "membership_status": "active",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-11-01T00:00:00Z",
+      "preferred_branch_id": "centro",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C002",
+      "display_name": "Cliente ficticio 002",
+      "segment": "general",
+      "membership_status": "none",
+      "membership_valid_from": null,
+      "membership_valid_until": null,
+      "preferred_branch_id": "norte",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C003",
+      "display_name": "Cliente ficticio 003",
+      "segment": "alianza",
+      "membership_status": "active",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-11-01T00:00:00Z",
+      "preferred_branch_id": "sur",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C004",
+      "display_name": "Cliente ficticio 004",
+      "segment": "club",
+      "membership_status": "active",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-11-01T00:00:00Z",
+      "preferred_branch_id": "centro",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C005",
+      "display_name": "Cliente ficticio 005",
+      "segment": "general",
+      "membership_status": "none",
+      "membership_valid_from": null,
+      "membership_valid_until": null,
+      "preferred_branch_id": "norte",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C006",
+      "display_name": "Cliente ficticio 006",
+      "segment": "alianza",
+      "membership_status": "active",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-11-01T00:00:00Z",
+      "preferred_branch_id": "sur",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C007",
+      "display_name": "Cliente ficticio 007",
+      "segment": "club",
+      "membership_status": "active",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-11-01T00:00:00Z",
+      "preferred_branch_id": "centro",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C008",
+      "display_name": "Cliente ficticio 008",
+      "segment": "general",
+      "membership_status": "none",
+      "membership_valid_from": null,
+      "membership_valid_until": null,
+      "preferred_branch_id": "norte",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C009",
+      "display_name": "Cliente ficticio 009",
+      "segment": "alianza",
+      "membership_status": "active",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-11-01T00:00:00Z",
+      "preferred_branch_id": "sur",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C010",
+      "display_name": "Cliente ficticio 010",
+      "segment": "club",
+      "membership_status": "active",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-11-01T00:00:00Z",
+      "preferred_branch_id": "centro",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C011",
+      "display_name": "Cliente ficticio 011",
+      "segment": "general",
+      "membership_status": "none",
+      "membership_valid_from": null,
+      "membership_valid_until": null,
+      "preferred_branch_id": "norte",
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "customer_id": "DEMO-C012",
+      "display_name": "Cliente ficticio 012",
+      "segment": "club",
+      "membership_status": "expired",
+      "membership_valid_from": "2026-09-01T00:00:00Z",
+      "membership_valid_until": "2026-10-01T00:00:00Z",
+      "preferred_branch_id": "sur",
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "purchases": [
+    {
+      "purchase_id": "DEMO-S001",
+      "customer_id": "DEMO-C001",
+      "branch_id": "centro",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1260,
+      "discount_cents": 0,
+      "total_cents": 1260,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S002",
+      "customer_id": "DEMO-C001",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1083,
+      "discount_cents": 171,
+      "total_cents": 912,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S003",
+      "customer_id": "DEMO-C001",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 761,
+      "discount_cents": 0,
+      "total_cents": 761,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S004",
+      "customer_id": "DEMO-C002",
+      "branch_id": "norte",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1140,
+      "discount_cents": 0,
+      "total_cents": 1140,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S005",
+      "customer_id": "DEMO-C002",
+      "branch_id": "norte",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 2780,
+      "discount_cents": 0,
+      "total_cents": 2780,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S006",
+      "customer_id": "DEMO-C002",
+      "branch_id": "norte",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1750,
+      "discount_cents": 0,
+      "total_cents": 1750,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S007",
+      "customer_id": "DEMO-C003",
+      "branch_id": "sur",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 2502,
+      "discount_cents": 0,
+      "total_cents": 2502,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S008",
+      "customer_id": "DEMO-C003",
+      "branch_id": "sur",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1575,
+      "discount_cents": 0,
+      "total_cents": 1575,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S009",
+      "customer_id": "DEMO-C003",
+      "branch_id": "sur",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1409,
+      "discount_cents": 0,
+      "total_cents": 1409,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S010",
+      "customer_id": "DEMO-C004",
+      "branch_id": "centro",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1664,
+      "discount_cents": 0,
+      "total_cents": 1664,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S011",
+      "customer_id": "DEMO-C004",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1487,
+      "discount_cents": 0,
+      "total_cents": 1487,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S012",
+      "customer_id": "DEMO-C004",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1640,
+      "discount_cents": 0,
+      "total_cents": 1640,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S013",
+      "customer_id": "DEMO-C005",
+      "branch_id": "norte",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1565,
+      "discount_cents": 0,
+      "total_cents": 1565,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S014",
+      "customer_id": "DEMO-C005",
+      "branch_id": "norte",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1725,
+      "discount_cents": 0,
+      "total_cents": 1725,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S015",
+      "customer_id": "DEMO-C005",
+      "branch_id": "norte",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 2010,
+      "discount_cents": 0,
+      "total_cents": 2010,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S016",
+      "customer_id": "DEMO-C006",
+      "branch_id": "sur",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1553,
+      "discount_cents": 0,
+      "total_cents": 1553,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S017",
+      "customer_id": "DEMO-C006",
+      "branch_id": "sur",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1809,
+      "discount_cents": 0,
+      "total_cents": 1809,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S018",
+      "customer_id": "DEMO-C006",
+      "branch_id": "sur",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 801,
+      "discount_cents": 0,
+      "total_cents": 801,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S019",
+      "customer_id": "DEMO-C007",
+      "branch_id": "centro",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1911,
+      "discount_cents": 0,
+      "total_cents": 1911,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S020",
+      "customer_id": "DEMO-C007",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 847,
+      "discount_cents": 0,
+      "total_cents": 847,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S021",
+      "customer_id": "DEMO-C007",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1426,
+      "discount_cents": 0,
+      "total_cents": 1426,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S022",
+      "customer_id": "DEMO-C008",
+      "branch_id": "norte",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 890,
+      "discount_cents": 0,
+      "total_cents": 890,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S023",
+      "customer_id": "DEMO-C008",
+      "branch_id": "norte",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1500,
+      "discount_cents": 0,
+      "total_cents": 1500,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S024",
+      "customer_id": "DEMO-C008",
+      "branch_id": "norte",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "general",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1850,
+      "discount_cents": 0,
+      "total_cents": 1850,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S025",
+      "customer_id": "DEMO-C009",
+      "branch_id": "sur",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1350,
+      "discount_cents": 0,
+      "total_cents": 1350,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S026",
+      "customer_id": "DEMO-C009",
+      "branch_id": "sur",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1665,
+      "discount_cents": 0,
+      "total_cents": 1665,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S027",
+      "customer_id": "DEMO-C009",
+      "branch_id": "sur",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "alianza",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1593,
+      "discount_cents": 0,
+      "total_cents": 1593,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S028",
+      "customer_id": "DEMO-C010",
+      "branch_id": "centro",
+      "purchased_at": "2026-09-20T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1758,
+      "discount_cents": 0,
+      "total_cents": 1758,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S029",
+      "customer_id": "DEMO-C010",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-02T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1682,
+      "discount_cents": 0,
+      "total_cents": 1682,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "purchase_id": "DEMO-S030",
+      "customer_id": "DEMO-C010",
+      "branch_id": "centro",
+      "purchased_at": "2026-10-07T12:00:00Z",
+      "price_list_id": "club",
+      "status": "completed",
+      "currency": "USD",
+      "subtotal_cents": 1217,
+      "discount_cents": 0,
+      "total_cents": 1217,
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "purchase_lines": [
+    {
+      "purchase_id": "DEMO-S001",
+      "line_number": 1,
+      "sku": "DEMO-001",
+      "quantity": 2,
+      "sell_unit": "paquete",
+      "unit_price_cents": 333,
+      "subtotal_cents": 666,
+      "discount_cents": 0,
+      "total_cents": 666,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S001",
+      "line_number": 2,
+      "sku": "DEMO-002",
+      "quantity": 1,
+      "sell_unit": "frasco",
+      "unit_price_cents": 594,
+      "subtotal_cents": 594,
+      "discount_cents": 0,
+      "total_cents": 594,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S002",
+      "line_number": 1,
+      "sku": "DEMO-003",
+      "quantity": 3,
+      "sell_unit": "unidad",
+      "unit_price_cents": 171,
+      "subtotal_cents": 513,
+      "discount_cents": 171,
+      "total_cents": 342,
+      "promotion_ids": [
+        "DEMO-P04"
+      ]
+    },
+    {
+      "purchase_id": "DEMO-S002",
+      "line_number": 2,
+      "sku": "DEMO-004",
+      "quantity": 1,
+      "sell_unit": "paquete",
+      "unit_price_cents": 570,
+      "subtotal_cents": 570,
+      "discount_cents": 0,
+      "total_cents": 570,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S003",
+      "line_number": 1,
+      "sku": "DEMO-001",
+      "quantity": 1,
+      "sell_unit": "paquete",
+      "unit_price_cents": 333,
+      "subtotal_cents": 333,
+      "discount_cents": 0,
+      "total_cents": 333,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S003",
+      "line_number": 2,
+      "sku": "DEMO-005",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 428,
+      "subtotal_cents": 428,
+      "discount_cents": 0,
+      "total_cents": 428,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S004",
+      "line_number": 1,
+      "sku": "DEMO-003",
+      "quantity": 1,
+      "sell_unit": "unidad",
+      "unit_price_cents": 180,
+      "subtotal_cents": 180,
+      "discount_cents": 0,
+      "total_cents": 180,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S004",
+      "line_number": 2,
+      "sku": "DEMO-010",
+      "quantity": 2,
+      "sell_unit": "caja",
+      "unit_price_cents": 480,
+      "subtotal_cents": 960,
+      "discount_cents": 0,
+      "total_cents": 960,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S005",
+      "line_number": 1,
+      "sku": "DEMO-004",
+      "quantity": 1,
+      "sell_unit": "paquete",
+      "unit_price_cents": 600,
+      "subtotal_cents": 600,
+      "discount_cents": 0,
+      "total_cents": 600,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S005",
+      "line_number": 2,
+      "sku": "DEMO-011",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 1090,
+      "subtotal_cents": 2180,
+      "discount_cents": 0,
+      "total_cents": 2180,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S006",
+      "line_number": 1,
+      "sku": "DEMO-005",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 450,
+      "subtotal_cents": 450,
+      "discount_cents": 0,
+      "total_cents": 450,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S006",
+      "line_number": 2,
+      "sku": "DEMO-012",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 650,
+      "subtotal_cents": 1300,
+      "discount_cents": 0,
+      "total_cents": 1300,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S007",
+      "line_number": 1,
+      "sku": "DEMO-004",
+      "quantity": 1,
+      "sell_unit": "paquete",
+      "unit_price_cents": 540,
+      "subtotal_cents": 540,
+      "discount_cents": 0,
+      "total_cents": 540,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S007",
+      "line_number": 2,
+      "sku": "DEMO-011",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 981,
+      "subtotal_cents": 1962,
+      "discount_cents": 0,
+      "total_cents": 1962,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S008",
+      "line_number": 1,
+      "sku": "DEMO-005",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 405,
+      "subtotal_cents": 405,
+      "discount_cents": 0,
+      "total_cents": 405,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S008",
+      "line_number": 2,
+      "sku": "DEMO-012",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 585,
+      "subtotal_cents": 1170,
+      "discount_cents": 0,
+      "total_cents": 1170,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S009",
+      "line_number": 1,
+      "sku": "DEMO-006",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 653,
+      "subtotal_cents": 653,
+      "discount_cents": 0,
+      "total_cents": 653,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S009",
+      "line_number": 2,
+      "sku": "DEMO-013",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 378,
+      "subtotal_cents": 756,
+      "discount_cents": 0,
+      "total_cents": 756,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S010",
+      "line_number": 1,
+      "sku": "DEMO-005",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 428,
+      "subtotal_cents": 428,
+      "discount_cents": 0,
+      "total_cents": 428,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S010",
+      "line_number": 2,
+      "sku": "DEMO-012",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 618,
+      "subtotal_cents": 1236,
+      "discount_cents": 0,
+      "total_cents": 1236,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S011",
+      "line_number": 1,
+      "sku": "DEMO-006",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 689,
+      "subtotal_cents": 689,
+      "discount_cents": 0,
+      "total_cents": 689,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S011",
+      "line_number": 2,
+      "sku": "DEMO-013",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 399,
+      "subtotal_cents": 798,
+      "discount_cents": 0,
+      "total_cents": 798,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S012",
+      "line_number": 1,
+      "sku": "DEMO-007",
+      "quantity": 1,
+      "sell_unit": "bolsa",
+      "unit_price_cents": 214,
+      "subtotal_cents": 214,
+      "discount_cents": 0,
+      "total_cents": 214,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S012",
+      "line_number": 2,
+      "sku": "DEMO-014",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 713,
+      "subtotal_cents": 1426,
+      "discount_cents": 0,
+      "total_cents": 1426,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S013",
+      "line_number": 1,
+      "sku": "DEMO-006",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 725,
+      "subtotal_cents": 725,
+      "discount_cents": 0,
+      "total_cents": 725,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S013",
+      "line_number": 2,
+      "sku": "DEMO-013",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 420,
+      "subtotal_cents": 840,
+      "discount_cents": 0,
+      "total_cents": 840,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S014",
+      "line_number": 1,
+      "sku": "DEMO-007",
+      "quantity": 1,
+      "sell_unit": "bolsa",
+      "unit_price_cents": 225,
+      "subtotal_cents": 225,
+      "discount_cents": 0,
+      "total_cents": 225,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S014",
+      "line_number": 2,
+      "sku": "DEMO-014",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 750,
+      "subtotal_cents": 1500,
+      "discount_cents": 0,
+      "total_cents": 1500,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S015",
+      "line_number": 1,
+      "sku": "DEMO-008",
+      "quantity": 1,
+      "sell_unit": "bolsa",
+      "unit_price_cents": 390,
+      "subtotal_cents": 390,
+      "discount_cents": 0,
+      "total_cents": 390,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S015",
+      "line_number": 2,
+      "sku": "DEMO-015",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 810,
+      "subtotal_cents": 1620,
+      "discount_cents": 0,
+      "total_cents": 1620,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S016",
+      "line_number": 1,
+      "sku": "DEMO-007",
+      "quantity": 1,
+      "sell_unit": "bolsa",
+      "unit_price_cents": 203,
+      "subtotal_cents": 203,
+      "discount_cents": 0,
+      "total_cents": 203,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S016",
+      "line_number": 2,
+      "sku": "DEMO-014",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 675,
+      "subtotal_cents": 1350,
+      "discount_cents": 0,
+      "total_cents": 1350,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S017",
+      "line_number": 1,
+      "sku": "DEMO-008",
+      "quantity": 1,
+      "sell_unit": "bolsa",
+      "unit_price_cents": 351,
+      "subtotal_cents": 351,
+      "discount_cents": 0,
+      "total_cents": 351,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S017",
+      "line_number": 2,
+      "sku": "DEMO-015",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 729,
+      "subtotal_cents": 1458,
+      "discount_cents": 0,
+      "total_cents": 1458,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S018",
+      "line_number": 1,
+      "sku": "DEMO-009",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 279,
+      "subtotal_cents": 279,
+      "discount_cents": 0,
+      "total_cents": 279,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S018",
+      "line_number": 2,
+      "sku": "DEMO-016",
+      "quantity": 2,
+      "sell_unit": "unidad",
+      "unit_price_cents": 261,
+      "subtotal_cents": 522,
+      "discount_cents": 0,
+      "total_cents": 522,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S019",
+      "line_number": 1,
+      "sku": "DEMO-008",
+      "quantity": 1,
+      "sell_unit": "bolsa",
+      "unit_price_cents": 371,
+      "subtotal_cents": 371,
+      "discount_cents": 0,
+      "total_cents": 371,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S019",
+      "line_number": 2,
+      "sku": "DEMO-015",
+      "quantity": 2,
+      "sell_unit": "frasco",
+      "unit_price_cents": 770,
+      "subtotal_cents": 1540,
+      "discount_cents": 0,
+      "total_cents": 1540,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S020",
+      "line_number": 1,
+      "sku": "DEMO-009",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 295,
+      "subtotal_cents": 295,
+      "discount_cents": 0,
+      "total_cents": 295,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S020",
+      "line_number": 2,
+      "sku": "DEMO-016",
+      "quantity": 2,
+      "sell_unit": "unidad",
+      "unit_price_cents": 276,
+      "subtotal_cents": 552,
+      "discount_cents": 0,
+      "total_cents": 552,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S021",
+      "line_number": 1,
+      "sku": "DEMO-010",
+      "quantity": 1,
+      "sell_unit": "caja",
+      "unit_price_cents": 456,
+      "subtotal_cents": 456,
+      "discount_cents": 0,
+      "total_cents": 456,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S021",
+      "line_number": 2,
+      "sku": "DEMO-017",
+      "quantity": 2,
+      "sell_unit": "paquete",
+      "unit_price_cents": 485,
+      "subtotal_cents": 970,
+      "discount_cents": 0,
+      "total_cents": 970,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S022",
+      "line_number": 1,
+      "sku": "DEMO-009",
+      "quantity": 1,
+      "sell_unit": "rollo",
+      "unit_price_cents": 310,
+      "subtotal_cents": 310,
+      "discount_cents": 0,
+      "total_cents": 310,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S022",
+      "line_number": 2,
+      "sku": "DEMO-016",
+      "quantity": 2,
+      "sell_unit": "unidad",
+      "unit_price_cents": 290,
+      "subtotal_cents": 580,
+      "discount_cents": 0,
+      "total_cents": 580,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S023",
+      "line_number": 1,
+      "sku": "DEMO-010",
+      "quantity": 1,
+      "sell_unit": "caja",
+      "unit_price_cents": 480,
+      "subtotal_cents": 480,
+      "discount_cents": 0,
+      "total_cents": 480,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S023",
+      "line_number": 2,
+      "sku": "DEMO-017",
+      "quantity": 2,
+      "sell_unit": "paquete",
+      "unit_price_cents": 510,
+      "subtotal_cents": 1020,
+      "discount_cents": 0,
+      "total_cents": 1020,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S024",
+      "line_number": 1,
+      "sku": "DEMO-011",
+      "quantity": 1,
+      "sell_unit": "frasco",
+      "unit_price_cents": 1090,
+      "subtotal_cents": 1090,
+      "discount_cents": 0,
+      "total_cents": 1090,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S024",
+      "line_number": 2,
+      "sku": "DEMO-018",
+      "quantity": 2,
+      "sell_unit": "tubo",
+      "unit_price_cents": 380,
+      "subtotal_cents": 760,
+      "discount_cents": 0,
+      "total_cents": 760,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S025",
+      "line_number": 1,
+      "sku": "DEMO-010",
+      "quantity": 1,
+      "sell_unit": "caja",
+      "unit_price_cents": 432,
+      "subtotal_cents": 432,
+      "discount_cents": 0,
+      "total_cents": 432,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S025",
+      "line_number": 2,
+      "sku": "DEMO-017",
+      "quantity": 2,
+      "sell_unit": "paquete",
+      "unit_price_cents": 459,
+      "subtotal_cents": 918,
+      "discount_cents": 0,
+      "total_cents": 918,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S026",
+      "line_number": 1,
+      "sku": "DEMO-011",
+      "quantity": 1,
+      "sell_unit": "frasco",
+      "unit_price_cents": 981,
+      "subtotal_cents": 981,
+      "discount_cents": 0,
+      "total_cents": 981,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S026",
+      "line_number": 2,
+      "sku": "DEMO-018",
+      "quantity": 2,
+      "sell_unit": "tubo",
+      "unit_price_cents": 342,
+      "subtotal_cents": 684,
+      "discount_cents": 0,
+      "total_cents": 684,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S027",
+      "line_number": 1,
+      "sku": "DEMO-012",
+      "quantity": 1,
+      "sell_unit": "frasco",
+      "unit_price_cents": 585,
+      "subtotal_cents": 585,
+      "discount_cents": 0,
+      "total_cents": 585,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S027",
+      "line_number": 2,
+      "sku": "DEMO-019",
+      "quantity": 2,
+      "sell_unit": "tubo",
+      "unit_price_cents": 504,
+      "subtotal_cents": 1008,
+      "discount_cents": 0,
+      "total_cents": 1008,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S028",
+      "line_number": 1,
+      "sku": "DEMO-011",
+      "quantity": 1,
+      "sell_unit": "frasco",
+      "unit_price_cents": 1036,
+      "subtotal_cents": 1036,
+      "discount_cents": 0,
+      "total_cents": 1036,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S028",
+      "line_number": 2,
+      "sku": "DEMO-018",
+      "quantity": 2,
+      "sell_unit": "tubo",
+      "unit_price_cents": 361,
+      "subtotal_cents": 722,
+      "discount_cents": 0,
+      "total_cents": 722,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S029",
+      "line_number": 1,
+      "sku": "DEMO-012",
+      "quantity": 1,
+      "sell_unit": "frasco",
+      "unit_price_cents": 618,
+      "subtotal_cents": 618,
+      "discount_cents": 0,
+      "total_cents": 618,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S029",
+      "line_number": 2,
+      "sku": "DEMO-019",
+      "quantity": 2,
+      "sell_unit": "tubo",
+      "unit_price_cents": 532,
+      "subtotal_cents": 1064,
+      "discount_cents": 0,
+      "total_cents": 1064,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S030",
+      "line_number": 1,
+      "sku": "DEMO-013",
+      "quantity": 1,
+      "sell_unit": "frasco",
+      "unit_price_cents": 399,
+      "subtotal_cents": 399,
+      "discount_cents": 0,
+      "total_cents": 399,
+      "promotion_ids": []
+    },
+    {
+      "purchase_id": "DEMO-S030",
+      "line_number": 2,
+      "sku": "DEMO-020",
+      "quantity": 2,
+      "sell_unit": "dispensador",
+      "unit_price_cents": 409,
+      "subtotal_cents": 818,
+      "discount_cents": 0,
+      "total_cents": 818,
+      "promotion_ids": []
+    }
+  ],
+  "promotions": [
+    {
+      "promotion_id": "DEMO-P01",
+      "title": "Dos paquetes de gasas: 10% demo",
+      "sku_ids": [
+        "DEMO-001"
+      ],
+      "price_list_ids": [
+        "general",
+        "club"
+      ],
+      "branch_ids": [
+        "centro",
+        "norte",
+        "sur"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "minimum_quantity": 2,
+      "minimum_subtotal_cents": 0,
+      "benefit": {
+        "kind": "percent",
+        "basis_points": 1000
+      },
+      "combinable_with": [
+        "DEMO-P02"
+      ],
+      "priority": 10,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "promotion_id": "DEMO-P02",
+      "title": "Gasas en Centro: 5% demo",
+      "sku_ids": [
+        "DEMO-001"
+      ],
+      "price_list_ids": [
+        "general"
+      ],
+      "branch_ids": [
+        "centro"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "minimum_quantity": 1,
+      "minimum_subtotal_cents": 0,
+      "benefit": {
+        "kind": "percent",
+        "basis_points": 500
+      },
+      "combinable_with": [
+        "DEMO-P01"
+      ],
+      "priority": 20,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "promotion_id": "DEMO-P03",
+      "title": "Shampoo club: 15% demo",
+      "sku_ids": [
+        "DEMO-002",
+        "DEMO-011"
+      ],
+      "price_list_ids": [
+        "club"
+      ],
+      "branch_ids": [
+        "centro",
+        "norte",
+        "sur"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "minimum_quantity": 1,
+      "minimum_subtotal_cents": 0,
+      "benefit": {
+        "kind": "percent",
+        "basis_points": 1500
+      },
+      "combinable_with": [],
+      "priority": 10,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "promotion_id": "DEMO-P04",
+      "title": "Jabón 3x2 demo",
+      "sku_ids": [
+        "DEMO-003"
+      ],
+      "price_list_ids": [
+        "general",
+        "club"
+      ],
+      "branch_ids": [
+        "centro",
+        "norte",
+        "sur"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "minimum_quantity": 3,
+      "minimum_subtotal_cents": 0,
+      "benefit": {
+        "kind": "buy_x_pay_y",
+        "buy_quantity": 3,
+        "pay_quantity": 2
+      },
+      "combinable_with": [],
+      "priority": 10,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "promotion_id": "DEMO-P05",
+      "title": "Gasas: oferta vencida demo",
+      "sku_ids": [
+        "DEMO-001"
+      ],
+      "price_list_ids": [
+        "general"
+      ],
+      "branch_ids": [
+        "centro",
+        "norte",
+        "sur"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-10-07T00:00:00Z",
+      "minimum_quantity": 1,
+      "minimum_subtotal_cents": 0,
+      "benefit": {
+        "kind": "percent",
+        "basis_points": 2000
+      },
+      "combinable_with": [],
+      "priority": 10,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "promotion_id": "DEMO-P06",
+      "title": "Gasas: oferta futura demo",
+      "sku_ids": [
+        "DEMO-001"
+      ],
+      "price_list_ids": [
+        "general"
+      ],
+      "branch_ids": [
+        "centro",
+        "norte",
+        "sur"
+      ],
+      "valid_from": "2026-10-09T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "minimum_quantity": 1,
+      "minimum_subtotal_cents": 0,
+      "benefit": {
+        "kind": "percent",
+        "basis_points": 2500
+      },
+      "combinable_with": [],
+      "priority": 10,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "promotion_id": "DEMO-P07",
+      "title": "Shampoo alianza: 8% demo",
+      "sku_ids": [
+        "DEMO-002"
+      ],
+      "price_list_ids": [
+        "alianza"
+      ],
+      "branch_ids": [
+        "centro",
+        "norte",
+        "sur"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "minimum_quantity": 1,
+      "minimum_subtotal_cents": 0,
+      "benefit": {
+        "kind": "percent",
+        "basis_points": 800
+      },
+      "combinable_with": [],
+      "priority": 10,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "promotion_id": "DEMO-P08",
+      "title": "Gasas Norte: compra mínima demo",
+      "sku_ids": [
+        "DEMO-001"
+      ],
+      "price_list_ids": [
+        "general"
+      ],
+      "branch_ids": [
+        "norte"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-11-01T00:00:00Z",
+      "minimum_quantity": 1,
+      "minimum_subtotal_cents": 1000,
+      "benefit": {
+        "kind": "percent",
+        "basis_points": 1000
+      },
+      "combinable_with": [],
+      "priority": 10,
+      "requires_coupon": false,
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "reservation_proposals": [
+    {
+      "proposal_id": "DEMO-R001",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-001",
+      "operation_id": "DEMO-R001",
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "quantity": 2,
+      "price_list_id": "general",
+      "unit_price_cents": 350,
+      "total_cents": 700,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:59:00Z",
+      "expires_at": "2026-10-08T14:04:00Z",
+      "status": "pending",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "centro",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": null,
+      "receipt": null,
+      "reconciliation_required": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "proposal_id": "DEMO-R002",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-002",
+      "operation_id": "DEMO-R002",
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "quantity": 2,
+      "price_list_id": "general",
+      "unit_price_cents": 350,
+      "total_cents": 700,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:59:00Z",
+      "expires_at": "2026-10-08T14:04:00Z",
+      "status": "executing",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "centro",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": null,
+      "receipt": null,
+      "reconciliation_required": true,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "proposal_id": "DEMO-R003",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-003",
+      "operation_id": "DEMO-R003",
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "quantity": 2,
+      "price_list_id": "general",
+      "unit_price_cents": 350,
+      "total_cents": 700,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:59:00Z",
+      "expires_at": "2026-10-08T14:04:00Z",
+      "status": "executed",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "centro",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": null,
+      "receipt": {
+        "reservation_id": "DEMO-H003",
+        "status": "held",
+        "held_quantity": 2,
+        "hold_expires_at": "2026-10-08T14:59:40Z"
+      },
+      "reconciliation_required": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "proposal_id": "DEMO-R004",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-004",
+      "operation_id": "DEMO-R004",
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "quantity": 2,
+      "price_list_id": "general",
+      "unit_price_cents": 350,
+      "total_cents": 700,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:59:00Z",
+      "expires_at": "2026-10-08T14:04:00Z",
+      "status": "rejected",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "centro",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": null,
+      "receipt": null,
+      "reconciliation_required": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "proposal_id": "DEMO-R005",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-005",
+      "operation_id": "DEMO-R005",
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "quantity": 2,
+      "price_list_id": "general",
+      "unit_price_cents": 350,
+      "total_cents": 700,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:50:00Z",
+      "expires_at": "2026-10-08T13:55:00Z",
+      "status": "expired",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "centro",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": null,
+      "receipt": null,
+      "reconciliation_required": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "proposal_id": "DEMO-R006",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-006",
+      "operation_id": "DEMO-R006",
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "quantity": 2,
+      "price_list_id": "general",
+      "unit_price_cents": 350,
+      "total_cents": 700,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:59:00Z",
+      "expires_at": "2026-10-08T14:04:00Z",
+      "status": "failed",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "centro",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": "offer_changed",
+      "receipt": null,
+      "reconciliation_required": false,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "proposal_id": "DEMO-R007",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-007",
+      "operation_id": "DEMO-R007",
+      "sku": "DEMO-001",
+      "branch_id": "centro",
+      "quantity": 2,
+      "price_list_id": "general",
+      "unit_price_cents": 350,
+      "total_cents": 700,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:59:00Z",
+      "expires_at": "2026-10-08T14:04:00Z",
+      "status": "uncertain",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "centro",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": "provider_outcome_unknown",
+      "receipt": null,
+      "reconciliation_required": true,
+      "source": "synthetic-mostrador-v1"
+    },
+    {
+      "proposal_id": "DEMO-R008",
+      "customer_id": "DEMO-C002",
+      "actor_id": "demo-clerk",
+      "idempotency_key": "fixture-008",
+      "operation_id": "DEMO-R008",
+      "sku": "DEMO-003",
+      "branch_id": "norte",
+      "quantity": 3,
+      "price_list_id": "general",
+      "unit_price_cents": 180,
+      "total_cents": 540,
+      "currency": "USD",
+      "offer_version_at_quote": 1,
+      "created_at": "2026-10-08T13:59:00Z",
+      "expires_at": "2026-10-08T14:04:00Z",
+      "status": "executed",
+      "conditions": {
+        "human_approval_required": true,
+        "pickup_branch_id": "norte",
+        "hold_seconds_after_execution": 3600,
+        "partial_fulfillment": false
+      },
+      "error_code": null,
+      "receipt": {
+        "reservation_id": "DEMO-H008",
+        "status": "held",
+        "held_quantity": 3,
+        "hold_expires_at": "2026-10-08T14:59:40Z"
+      },
+      "reconciliation_required": false,
+      "source": "synthetic-mostrador-v1"
+    }
+  ],
+  "reservation_events": [
+    {
+      "proposal_id": "DEMO-R001",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R002",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R002",
+      "sequence": 2,
+      "kind": "approved",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:30Z"
+    },
+    {
+      "proposal_id": "DEMO-R003",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R003",
+      "sequence": 2,
+      "kind": "approved",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:30Z"
+    },
+    {
+      "proposal_id": "DEMO-R003",
+      "sequence": 3,
+      "kind": "executed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:40Z"
+    },
+    {
+      "proposal_id": "DEMO-R004",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R004",
+      "sequence": 2,
+      "kind": "rejected",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:40Z"
+    },
+    {
+      "proposal_id": "DEMO-R005",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:50:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R005",
+      "sequence": 2,
+      "kind": "expired",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:40Z"
+    },
+    {
+      "proposal_id": "DEMO-R006",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R006",
+      "sequence": 2,
+      "kind": "approved",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:30Z"
+    },
+    {
+      "proposal_id": "DEMO-R006",
+      "sequence": 3,
+      "kind": "failed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:40Z"
+    },
+    {
+      "proposal_id": "DEMO-R007",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R007",
+      "sequence": 2,
+      "kind": "approved",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:30Z"
+    },
+    {
+      "proposal_id": "DEMO-R007",
+      "sequence": 3,
+      "kind": "uncertain",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:40Z"
+    },
+    {
+      "proposal_id": "DEMO-R008",
+      "sequence": 1,
+      "kind": "proposed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:00Z"
+    },
+    {
+      "proposal_id": "DEMO-R008",
+      "sequence": 2,
+      "kind": "approved",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:30Z"
+    },
+    {
+      "proposal_id": "DEMO-R008",
+      "sequence": 3,
+      "kind": "executed",
+      "actor_id": "demo-clerk",
+      "occurred_at": "2026-10-08T13:59:40Z"
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "SEARCH-01",
+      "capability": "product_search",
+      "question": "Busca DEMO-001",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "query": "DEMO-001"
+      },
+      "expected": {
+        "sku_ids": [
+          "DEMO-001"
+        ],
+        "needs_clarification": false
+      }
+    },
+    {
+      "scenario_id": "SEARCH-02",
+      "capability": "product_search",
+      "question": "Quiero gasas",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "query": "gasas"
+      },
+      "expected": {
+        "sku_ids": [
+          "DEMO-001",
+          "DEMO-004"
+        ],
+        "needs_clarification": true
+      }
+    },
+    {
+      "scenario_id": "SEARCH-03",
+      "capability": "product_search",
+      "question": "Shampoo de 500 ml",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "query": "shampoo",
+        "presentation": "500 ml"
+      },
+      "expected": {
+        "sku_ids": [
+          "DEMO-011"
+        ],
+        "needs_clarification": false
+      }
+    },
+    {
+      "scenario_id": "SEARCH-04",
+      "capability": "product_search",
+      "question": "Busca DEMO-999",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "query": "DEMO-999"
+      },
+      "expected": {
+        "sku_ids": [],
+        "needs_clarification": false
+      }
+    },
+    {
+      "scenario_id": "SEARCH-05",
+      "capability": "product_search",
+      "question": "Busca el neceser retirado",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "query": "DEMO-030"
+      },
+      "expected": {
+        "sku_ids": [],
+        "needs_clarification": false,
+        "reason": "inactive_product"
+      }
+    },
+    {
+      "scenario_id": "STOCK-01",
+      "capability": "price_stock",
+      "question": "Dos shampoos de 250 ml, ¿dónde hay?",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-002",
+        "quantity": 2
+      },
+      "expected": {
+        "eligible_branch_ids": [
+          "norte",
+          "sur"
+        ],
+        "unavailable_branch_ids": [
+          "centro"
+        ]
+      }
+    },
+    {
+      "scenario_id": "STOCK-02",
+      "capability": "price_stock",
+      "question": "¿Cuántas gasas de 10 quedan en Centro?",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "branch_id": "centro"
+      },
+      "expected": {
+        "on_hand": 8,
+        "reserved": 2,
+        "available": 6
+      }
+    },
+    {
+      "scenario_id": "STOCK-03",
+      "capability": "price_stock",
+      "question": "¿Puedo prometer curitas en Sur?",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-010",
+        "branch_id": "sur"
+      },
+      "expected": {
+        "refresh_required": true,
+        "promise_stock": false
+      }
+    },
+    {
+      "scenario_id": "STOCK-04",
+      "capability": "price_stock",
+      "question": "¿Hay guantes talla M?",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-029",
+        "quantity": 1
+      },
+      "expected": {
+        "eligible_branch_ids": [],
+        "unavailable_branch_ids": [
+          "centro",
+          "norte",
+          "sur"
+        ]
+      }
+    },
+    {
+      "scenario_id": "PRICE-01",
+      "capability": "price_stock",
+      "question": "Dos gasas de 10 a precio general",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 2,
+        "customer_id": "DEMO-C002"
+      },
+      "expected": {
+        "price_list_id": "general",
+        "unit_price_cents": 350,
+        "total_cents": 700
+      }
+    },
+    {
+      "scenario_id": "PRICE-02",
+      "capability": "price_stock",
+      "question": "Dos gasas de 10 para cliente club",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 2,
+        "customer_id": "DEMO-C001"
+      },
+      "expected": {
+        "price_list_id": "club",
+        "unit_price_cents": 333,
+        "total_cents": 666
+      }
+    },
+    {
+      "scenario_id": "PRICE-03",
+      "capability": "price_stock",
+      "question": "Shampoo para membresía vencida",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-002",
+        "quantity": 1,
+        "customer_id": "DEMO-C012"
+      },
+      "expected": {
+        "price_list_id": "general",
+        "unit_price_cents": 625,
+        "total_cents": 625
+      }
+    },
+    {
+      "scenario_id": "CLIENT-01",
+      "capability": "customer_360",
+      "question": "Resumen del cliente ficticio 001",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "customer_id": "DEMO-C001"
+      },
+      "expected": {
+        "purchase_count": 3,
+        "total_spent_cents": 2933,
+        "last_purchase_at": "2026-10-07T12:00:00Z",
+        "repeated_sku_ids": [
+          "DEMO-001"
+        ]
+      }
+    },
+    {
+      "scenario_id": "CLIENT-02",
+      "capability": "customer_360",
+      "question": "Historial del cliente nuevo 011",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "customer_id": "DEMO-C011"
+      },
+      "expected": {
+        "purchase_count": 0,
+        "total_spent_cents": 0,
+        "last_purchase_at": null,
+        "repeated_sku_ids": []
+      }
+    },
+    {
+      "scenario_id": "CLIENT-03",
+      "capability": "customer_360",
+      "question": "Consulta un cliente inexistente",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "customer_id": "DEMO-C999"
+      },
+      "expected": {
+        "error": "customer_not_found",
+        "must_not_invent_history": true
+      }
+    },
+    {
+      "scenario_id": "PROMO-01",
+      "capability": "promotion",
+      "question": "Combina las dos ofertas de gasas en Centro",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 2,
+        "branch_id": "centro",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P01",
+          "DEMO-P02"
+        ]
+      },
+      "expected": {
+        "subtotal_cents": 700,
+        "discounts_cents": [
+          70,
+          32
+        ],
+        "total_cents": 598
+      }
+    },
+    {
+      "scenario_id": "PROMO-02",
+      "capability": "promotion",
+      "question": "Shampoo de 250 ml con oferta club",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-002",
+        "quantity": 1,
+        "branch_id": "norte",
+        "price_list_id": "club",
+        "promotion_ids": [
+          "DEMO-P03"
+        ]
+      },
+      "expected": {
+        "subtotal_cents": 594,
+        "discounts_cents": [
+          89
+        ],
+        "total_cents": 505
+      }
+    },
+    {
+      "scenario_id": "PROMO-03",
+      "capability": "promotion",
+      "question": "Tres jabones con 3x2",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-003",
+        "quantity": 3,
+        "branch_id": "centro",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P04"
+        ]
+      },
+      "expected": {
+        "subtotal_cents": 540,
+        "discounts_cents": [
+          180
+        ],
+        "total_cents": 360
+      }
+    },
+    {
+      "scenario_id": "PROMO-04",
+      "capability": "promotion",
+      "question": "¿Puedo combinar las ofertas de Norte?",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 3,
+        "branch_id": "norte",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P01",
+          "DEMO-P08"
+        ]
+      },
+      "expected": {
+        "error": "incompatible_promotions"
+      }
+    },
+    {
+      "scenario_id": "PROMO-05",
+      "capability": "promotion",
+      "question": "Usa la oferta de gasas vencida",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 2,
+        "branch_id": "centro",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P05"
+        ]
+      },
+      "expected": {
+        "error": "promotion_expired"
+      }
+    },
+    {
+      "scenario_id": "PROMO-06",
+      "capability": "promotion",
+      "question": "Usa la oferta que empieza mañana",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 2,
+        "branch_id": "centro",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P06"
+        ]
+      },
+      "expected": {
+        "error": "promotion_not_started"
+      }
+    },
+    {
+      "scenario_id": "PROMO-07",
+      "capability": "promotion",
+      "question": "Aplica oferta de Norte en Centro",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 3,
+        "branch_id": "centro",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P08"
+        ]
+      },
+      "expected": {
+        "error": "branch_ineligible"
+      }
+    },
+    {
+      "scenario_id": "PROMO-08",
+      "capability": "promotion",
+      "question": "Dos gasas alcanzan el mínimo de Norte?",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 2,
+        "branch_id": "norte",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P08"
+        ]
+      },
+      "expected": {
+        "error": "minimum_subtotal_not_met"
+      }
+    },
+    {
+      "scenario_id": "PROMO-09",
+      "capability": "promotion",
+      "question": "Aplica descuento club a precio general",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-002",
+        "quantity": 1,
+        "branch_id": "norte",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P03"
+        ]
+      },
+      "expected": {
+        "error": "price_list_ineligible"
+      }
+    },
+    {
+      "scenario_id": "PROMO-10",
+      "capability": "promotion",
+      "question": "Una gasa con oferta por cantidad",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "quantity": 1,
+        "branch_id": "centro",
+        "price_list_id": "general",
+        "promotion_ids": [
+          "DEMO-P01"
+        ]
+      },
+      "expected": {
+        "error": "minimum_quantity_not_met"
+      }
+    },
+    {
+      "scenario_id": "PROMO-11",
+      "capability": "promotion",
+      "question": "Shampoo alianza con oferta",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-002",
+        "quantity": 1,
+        "branch_id": "norte",
+        "price_list_id": "alianza",
+        "promotion_ids": [
+          "DEMO-P07"
+        ]
+      },
+      "expected": {
+        "subtotal_cents": 563,
+        "discounts_cents": [
+          45
+        ],
+        "total_cents": 518
+      }
+    },
+    {
+      "scenario_id": "RESERVE-01",
+      "capability": "reservation",
+      "question": "Prepara siete gasas de 10 en Centro",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "branch_id": "centro",
+        "quantity": 7
+      },
+      "expected": {
+        "error": "insufficient_stock",
+        "available": 6,
+        "must_not_reserve": true
+      }
+    },
+    {
+      "scenario_id": "RESERVE-02",
+      "capability": "reservation",
+      "question": "Prepara dos gasas de 10 en Centro",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "sku": "DEMO-001",
+        "branch_id": "centro",
+        "quantity": 2
+      },
+      "expected": {
+        "can_propose": true,
+        "human_approval_required": true,
+        "stock_delta_on_propose": 0
+      }
+    },
+    {
+      "scenario_id": "RESERVE-03",
+      "capability": "reservation",
+      "question": "Reintenta la operación incierta",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "proposal_id": "DEMO-R007",
+        "decision": "approve"
+      },
+      "expected": {
+        "status": "uncertain",
+        "automatic_retry": false,
+        "reconciliation_required": true
+      }
+    },
+    {
+      "scenario_id": "RESERVE-04",
+      "capability": "reservation",
+      "question": "Consulta la reserva ya ejecutada",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "proposal_id": "DEMO-R003"
+      },
+      "expected": {
+        "status": "executed",
+        "reservation_id": "DEMO-H003",
+        "held_quantity": 2
+      }
+    },
+    {
+      "scenario_id": "RESERVE-05",
+      "capability": "reservation",
+      "question": "Confirma propuesta vencida",
+      "as_of": "2026-10-08T14:00:00Z",
+      "input": {
+        "proposal_id": "DEMO-R005",
+        "decision": "approve"
+      },
+      "expected": {
+        "status": "expired",
+        "must_not_reserve": true
+      }
+    }
+  ]
+}
