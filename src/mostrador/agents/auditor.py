@@ -88,6 +88,7 @@ class InsightStore:
     def __init__(self, path: str):
         if path == ":memory:":
             raise ValueError("Use a file for durable insight decisions")
+        self.path = path
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         with self._connect() as db:
             db.executescript("""
@@ -106,7 +107,7 @@ class InsightStore:
                     timestamp INTEGER NOT NULL
                 );
             """)
-        self.path = path
+
 
     @contextmanager
     def _connect(self):
