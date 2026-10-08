@@ -52,9 +52,24 @@ evaluar promociones con disponibilidad y condiciones comerciales verificadas.
   como `superseded`.
 - La aprobación solo registra intención. `execution_status=not_configured` siempre.
 
-La demo etiqueta previamente el SKU y sucursal de cada mensaje; no contiene extracción
-con IA, escucha de WhatsApp ni acceso a infraestructura empresarial. El análisis periódico
-relee un archivo, cuyo corte histórico no se convierte en tiempo real por repetirlo.
+Incremento fuentes + Bedrock implementado:
+
+- `sales_context.py` y `data/sales/`: 40 conversaciones, seis consultas añadibles,
+  cuatro productos, tres sucursales, ventas/recepciones/ajustes y seis documentos ficticios.
+- `bedrock.py`: Converse con Nova Lite por defecto, 1 RPS máximo por instancia,
+  caché persistente y errores seguros; modo offline explícito sin fallback silencioso.
+- `sales_workspace.py`: texto a señales validadas, documentos por vigencia/SKU/sucursal,
+  condiciones aplicadas en código, citas originales, faltantes y revisiones requeridas.
+- `sales_routes.py`: contrato `/workspace` y frontend en `static/` servido desde `/`.
+- Simular consultas → reanalizar → revisar evidencia → aprobar/rechazar, sin ejecutar.
+- Reanalizar correctamente renueva propuestas pendientes vencidas con evento `revalidated`;
+  nunca reabre decisiones ya tomadas. Cambiar fuentes bloquea aprobar evidencia anterior.
+
+La nueva bandeja extrae el producto desde texto sintético; la sucursal procede de metadata
+autorizada. Ante ambigüedad se abstiene; conversaciones sin sucursal no se exponen a perfiles
+de sucursal. La API histórica `/analysis/run` conserva señales preetiquetadas por compatibilidad.
+No hay escucha de WhatsApp ni infraestructura empresarial conectada. El corte histórico
+no se convierte en tiempo real por repetir el análisis.
 
 ## Arranque
 
@@ -63,11 +78,15 @@ uv sync --locked
 COPILOT_MODE=demo SALES_SCAN_INTERVAL_SECONDS=30 uv run uvicorn mostrador.backoffice_api:create_app --factory --host 127.0.0.1 --port 8000
 ```
 
-Swagger: http://127.0.0.1:8000/docs. Tokens públicos: `demo-encargado` y `demo-viewer`
+Bandeja: http://127.0.0.1:8000. Swagger: `/docs`. Tokens públicos: `demo-encargado` y `demo-viewer`
 para Centro; `demo-jefe-zona` para Centro/Norte; `demo-encargado-quito` para Quito.
 Base: `.local/sales.sqlite`. Usar otra ruta con `COPILOT_DB_PATH` para una sesión nueva.
 `SALES_SCAN_INTERVAL_SECONDS=0` desactiva el ciclo periódico; el análisis inicial se mantiene.
-Solo se permite modo demo; los proveedores reales todavía no están implementados.
+La bandeja guarda datos en `<COPILOT_DB_PATH>.workspace.sqlite`.
+Por defecto `SALES_AI_MODE=offline`; para IA añadir `SALES_AI_MODE=bedrock`,
+`AWS_PROFILE=sales-hackathon`, `AWS_REGION=us-east-1` con credenciales fuera del repositorio.
+Solo se permite contenido sintético, incluso usando Bedrock. No hay filtro automático de PII.
+El ciclo periódico de la bandeja comienza tras el primer análisis manual y actúa al cambiar fuentes.
 
 ## Historia de demo
 
@@ -93,9 +112,8 @@ El pitch utilizable está en [docs/checkpoint-1.md](docs/checkpoint-1.md).
 Leer [diseño](docs/design.md), [arquitectura](docs/architecture.md),
 [datos](data/backoffice/README.md) y [proveedores](docs/providers.md).
 
-1. UI de recomendaciones con evidencia, estados y decisión operativa.
-2. Extraer señales comerciales de mensajes sintéticos con un modelo; validar SKU/sucursal
-   y separar el contenido de mensajes de las instrucciones del sistema.
+1. UI y extracción Bedrock implementadas; completar evaluación con escenarios reservados.
+2. Validar condiciones comerciales y heurísticas con el mentor/usuario operativo.
 3. Conectar las tres fuentes autorizadas y registrar cobertura, frescura y procedencia.
 4. Evaluar detección contra escenarios reservados al evaluador.
 5. Diseñar ejecución: payload exacto aprobado, condiciones, vencimiento, permisos,

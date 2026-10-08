@@ -7,9 +7,9 @@ El encargado revisa la evidencia y aprueba o rechaza dentro de su sucursal o zon
 ninguna acción externa se ejecuta
 sin una decisión humana y un conector autorizado.
 
-**Estado:** base local ejecutable con análisis determinista, datos sintéticos y revisión
-persistente. Todavía no es un agente con LLM ni una integración real con Farmaenlace.
-La interfaz de producto está pendiente; Swagger permite explorar la API.
+**Estado:** bandeja visual ejecutable, fuentes sintéticas completas, interpretación con
+Amazon Bedrock (opcional), cálculos deterministas y revisión humana persistente.
+No está conectado a datos ni operaciones reales de Farmaenlace.
 
 ## Arranque
 
@@ -20,38 +20,64 @@ uv sync --locked
 COPILOT_MODE=demo uv run uvicorn mostrador.backoffice_api:create_app --factory --host 127.0.0.1 --port 8000
 ```
 
-Abre http://127.0.0.1:8000/docs y usa **Authorize** con `demo-encargado`.
+Abre http://127.0.0.1:8000. La bandeja permite elegir un perfil demo.
+Swagger está en `/docs`; usa **Authorize** con `demo-encargado`.
 `demo-encargado` opera Guayaquil Centro; `demo-jefe-zona` opera Centro y Norte.
 `demo-encargado-quito` opera Quito. `demo-viewer` solo consulta Centro.
 Los permisos se comprueban en el servidor, también al acceder por ID.
 Estos tokens son públicos: usar solamente en local.
 
-Se analiza el snapshot al arrancar. Para repetir el análisis en segundo plano:
+Sin configuración adicional se usa `SALES_AI_MODE=offline`: simulación local explícita,
+no IA. Para interpretar las conversaciones con AWS:
+
+```sh
+AWS_PROFILE=sales-hackathon AWS_REGION=us-east-1 SALES_AI_MODE=bedrock \
+COPILOT_MODE=demo uv run uvicorn mostrador.backoffice_api:create_app --factory --host 127.0.0.1 --port 8000
+```
+
+El perfil temporal debe existir fuera del proyecto. Modelo predeterminado:
+`amazon.nova-lite-v1:0`, configurable mediante `SALES_BEDROCK_MODEL`.
+Si AWS falla no se sustituye silenciosamente por resultados locales. Una instancia,
+un worker, llamadas serializadas con separación mínima de 1,05 segundos y sin reintentos SDK.
+
+Pulsa **Analizar fuentes** para el primer análisis. Para detectar posteriormente nuevas
+conversaciones sintéticas en segundo plano:
 
 ```sh
 COPILOT_MODE=demo SALES_SCAN_INTERVAL_SECONDS=30 uv run uvicorn mostrador.backoffice_api:create_app --factory --host 127.0.0.1 --port 8000
 ```
 
-El ciclo relee el snapshot configurado; no conecta WhatsApp ni refresca sistemas externos.
+El ciclo analiza las fuentes de la bandeja cuando cambian, después del primer análisis manual.
+No conecta WhatsApp ni refresca sistemas externos.
 Los datos incluidos tienen un corte fijo del 8 de octubre de 2026, no son datos en vivo.
-`SALES_SNAPSHOT_PATH` permite seleccionar otro JSON **sintético** validado con el mismo
-contrato. No se admiten datasets reales en esta demo.
+`SALES_SNAPSHOT_PATH` configura únicamente la API histórica `/analysis/run`, no `/workspace`.
+No cargar datasets reales en esta demo: `synthetic:true` es una declaración del remitente,
+no un detector ni anonimizador de información personal.
 
 `COPILOT_DB_PATH` selecciona el archivo SQLite; por defecto `.local/sales.sqlite`.
-Para una sesión nueva, usa otra ruta. Reiniciar conserva las decisiones.
+La bandeja usa el archivo derivado `<COPILOT_DB_PATH>.workspace.sqlite`, separado de la
+API histórica. Para una sesión nueva, usa otra ruta. Reiniciar conserva fuentes y decisiones.
 `.env.example` documenta variables y no se carga automáticamente.
 
 ## Recorrido de demo
 
-1. `POST /analysis/run`: cruza las tres fuentes y devuelve evidencia por producto/sucursal.
-2. `GET /recommendations`: consulta la bandeja, incluidos los estados anteriores.
-3. `GET /recommendations/{id}`: revisa ventana, consultas, ventas, stock y promociones.
-4. `POST /recommendations/{id}/decision`: envía `{"decision":"approve"}` o `{"decision":"reject"}`.
-5. `GET /recommendations/{id}/events`: comprueba quién tomó la decisión y cuándo.
+1. **Analizar fuentes**: interpreta 40 conversaciones y consulta documentos comerciales.
+2. **Simular 6 consultas**: añade interés por Vitamina C en Guayaquil Centro, una sola vez.
+3. **Analizar fuentes**: sube de dos a ocho consultas recientes, frente a dos anteriores.
+4. Selecciona Vitamina C de Centro: 180 disponibles (18%), objetivo 680, reposición de 500.
+5. Revisa conversaciones, movimientos y documentos citados; la propuesta añade una
+   promoción de siete días condicionada a reponer/revalidar stock y definir condiciones.
+6. **Aprobar intención** o **Rechazar propuesta**, confirma y revisa el historial de eventos.
+
+API para el compañero: `GET /workspace`, `POST /workspace/analyze`,
+`POST /workspace/demo/burst`, `POST /workspace/conversations`,
+`POST /workspace/recommendations/{id}/decision` y
+`GET /workspace/recommendations/{id}/events`. [Contrato y plan](docs/superpowers/plans/2026-10-08-context-bedrock.md).
+En **Explorar fuentes** están los mensajes, documentos, movimientos e inventario del perfil.
 
 La cuenta de Centro recibe dos propuestas: reabastecer 500 unidades de Vitamina C
-ficticia y evaluar una promoción de jabón. La primera incluye una promoción propuesta
-de siete días, condicionada a reponer y revalidar stock. No propone otra campaña de
+ficticia y evaluar una promoción de jabón. Tras la simulación, la primera incluye una
+promoción de siete días condicionada a reponer y revalidar stock. No propone otra campaña de
 pañuelos porque ya hay una vigente. El jefe de zona recibe también la propuesta de Norte.
 La aprobación queda como `approved`, con `execution_status: not_configured`.
 **Aprobar no compra, transfiere, reserva stock ni publica promociones.**
@@ -66,7 +92,11 @@ Una propuesta nueva necesita su propia aprobación cuando cambia la evidencia.
   y vigencia de promociones. Reglas demo explícitas, sin predicción de ventas.
 - Abstención ante inventario antiguo; sin base comparable no se afirma crecimiento.
 - Propuestas, permisos por sucursal/zona, decisiones persistentes y eventos en SQLite.
-- Análisis inicial, ejecución manual y ciclo periódico opcional.
+- Bedrock interpreta texto, identifica producto/sucursal y selecciona documentos; el servidor
+  valida referencias y calcula cantidades. Casos ambiguos no suman señales comerciales.
+- Seis documentos ficticios con vigencia, sucursal, productos y condiciones tipadas.
+- Citas textuales, faltantes y aprobación requerida. Caché persistente e invalidación por contexto.
+- Bandeja visual accesible, ejecución manual y ciclo periódico opcional.
 - Pruebas, Dockerfile, CI y dependencias fijadas.
 
 [Pitch para el Checkpoint #1](docs/checkpoint-1.md).
@@ -82,9 +112,7 @@ sistema responsable. La demo no modifica ni sustituye esos sistemas y no está c
 
 ## Trabajo que falta para el producto
 
-- Bandeja visual del encargado y explicación conversacional de cada recomendación.
 - Conectores autorizados para WhatsApp, inventario y promociones.
-- Extracción de intenciones con IA: hoy SKU y sucursal vienen etiquetados en la fixture.
 - Ejecutor externo que revalide condiciones y permisos después de aprobar.
 - Autenticación real, aislamiento por organización, monitoreo y evaluación del agente.
 - Medición de impacto: tiempo de análisis, aceptación de propuestas y roturas de stock.
@@ -99,6 +127,7 @@ uv run pytest -q
 uv run ruff check .
 uv run ruff format --check src tests examples
 uv build
+node --test tests/ui/app.test.cjs
 ```
 
 Docker opcional:
@@ -124,3 +153,7 @@ La base conserva su [licencia MIT y copyright](LICENSE).
 Ver [procedencia](docs/provenance.md), [contribución](CONTRIBUTING.md) y [seguridad](SECURITY.md).
 Los adjuntos del evento permanecen en `.context/`, fuera de Git, Docker y los paquetes.
 Declarar la base y herramientas previas según las reglas del hackatón.
+
+Pregunta lista para el mentor (aún no enviada): «¿Habrá datasets oficiales autorizados de
+consultas, ventas/inventario y condiciones comerciales? ¿Qué campos, sucursales y corte
+temporal incluirán? Continuamos con fuentes sintéticas sin depender de esa entrega».

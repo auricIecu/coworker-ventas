@@ -71,6 +71,7 @@ class Promotion(Record):
 
 class Snapshot(Record):
     synthetic: Literal[True]
+    context_revision: str = ""
     as_of: AwareDatetime
     coverage_start: AwareDatetime
     window_days: Annotated[int, Field(strict=True, ge=1, le=30)] = 7

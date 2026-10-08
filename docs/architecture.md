@@ -1,9 +1,11 @@
 # Arquitectura del sales back office
 
 ```text
-Snapshot sintético de las tres fuentes
+Conversaciones + operaciones + documentos sintéticos
+              ↓ Bedrock (o simulación offline explícita)
+Intenciones y referencias validadas; ambigüedad → abstención
               ↓ validación y corte común
-Analizador determinista — inicio / petición / intervalo
+Analizador determinista — petición / intervalo tras primer análisis
               ↓ propuestas con evidencia
 Bandeja SQLite + eventos
               ↓ revisión del encargado
@@ -17,6 +19,11 @@ Ejecución externa pendiente de implementar
 - `backoffice.py`: esquema de entrada, relaciones y reglas de análisis.
 - `backoffice_store.py`: persistencia, deduplicación, vencimiento de aprobación y decisiones.
 - `backoffice_api.py`: autenticación demo, HTTP y ciclo periódico opcional.
+- `sales_context.py`: conversaciones y documentos tipados, relaciones y vigencia.
+- `bedrock.py`: transporte Converse, formato JSON y límite de solicitudes.
+- `sales_interpretation.py`: validación de salida y simulación offline diferenciada.
+- `sales_workspace.py`: ingestión, caché, grounding, condiciones y revisión.
+- `sales_routes.py` y `static/`: API `/workspace` y bandeja visual.
 - `data/backoffice_demo.json` dentro del paquete: fixture de arranque sin secretos.
 - `tests/test_backoffice.py`: resultados, límites, permisos y persistencia.
 
@@ -31,9 +38,11 @@ distintas por SKU/sucursal/ventana, no cantidad de mensajes. La cobertura de sto
 ventas observadas: disponible / (unidades vendidas / días), o valor desconocido sin ventas.
 Es una estimación descriptiva, no un pronóstico ni una garantía de disponibilidad.
 
-SKU y sucursal llegan ya resueltos. El mensaje de ejemplo no se ejecuta ni se interpreta
-como instrucciones. Las recomendaciones contienen IDs de evidencia y agregados, no textos
-de conversaciones. El contrato demo exige cobertura declarada de dos ventanas completas;
+En `/workspace`, Bedrock interpreta el producto desde texto y consulta documentos activos.
+La sucursal solo puede coincidir con metadata autorizada. Mensajes y documentos son datos,
+no instrucciones. El servidor rechaza IDs inventados, citas fuera de alcance y salidas incompletas.
+Las propuestas incluyen IDs, agregados, citas de conversaciones/documentos y faltantes.
+El modelo no calcula cantidades ni decide aprobaciones. El contrato exige dos ventanas completas;
 no puede comprobar que un proveedor realmente entregó todos los registros.
 
 ## Decisiones durables
@@ -45,6 +54,8 @@ decisiones ya tomadas como historial.
 
 La aprobación vence 900 segundos después de crear la propuesta. El rechazo sigue disponible
 mientras esté pendiente. Repetir la misma decisión devuelve el resultado previo.
+En `/workspace`, un nuevo análisis exitoso renueva pendientes vencidas durante 900 segundos
+y añade `revalidated`; no renueva ni reabre decisiones aprobadas/rechazadas.
 Una decisión contradictoria devuelve conflicto. SQLite serializa las escrituras y registra
 cambio de estado y evento en la misma transacción.
 
@@ -55,8 +66,10 @@ No existe endpoint de ejecución.
 
 ## Ciclo de análisis
 
-Arranque y `POST /analysis/run` ejecutan un análisis. `SALES_SCAN_INTERVAL_SECONDS`
+Arranque y `POST /analysis/run` ejecutan el análisis histórico separado. `POST /workspace/analyze`
+ejecuta el nuevo flujo. `SALES_SCAN_INTERVAL_SECONDS`
 habilita el ciclo local (mínimo diez segundos; cero lo desactiva).
+La bandeja se analiza periódicamente solo tras el primer análisis manual y si cambiaron fuentes.
 El reloj del análisis es el corte del archivo; el del vencimiento es el reloj del servidor.
 Un snapshot inválido produce error de fuente y bloquea nuevas aprobaciones.
 Los análisis se serializan desde la lectura hasta la persistencia para que una petición
@@ -69,7 +82,11 @@ entrega de tareas. Usar una sola instancia local para la demo.
 ## Límites
 
 Tokens públicos de demo con permisos por sucursal/zona, una organización, sin CORS abierto,
-sin LLM, sin WhatsApp,
+Bedrock opcional, sin WhatsApp,
 sin ERP/POS, sin campañas externas ni compras. El snapshot por archivo es configuración
 confiable del servidor, no una subida pública. Una integración real requiere contratos
 por fuente, autenticación, límites, revalidación y reconciliación explícitos.
+
+Para seis documentos no hace falta una base vectorial: se entrega contexto activo al modelo
+y se filtra evidencia por SKU, sucursal y vigencia en código. La caché incluye documentos,
+catálogo, conversaciones, prompt, modo y modelo. No equivale a búsqueda sobre un corpus ilimitado.

@@ -15,6 +15,7 @@ from pydantic import BaseModel, ConfigDict
 from mostrador.backoffice import Reviewer, Snapshot, load_demo
 from mostrador.backoffice_store import RecommendationStore
 from mostrador.domain import DomainError
+from mostrador.sales_routes import install_sales_routes
 
 
 class Decision(BaseModel):
@@ -40,7 +41,8 @@ def create_app(
         raise ValueError("Scan interval must be 0 (manual) or at least 10 seconds")
     configured_path = snapshot_path or os.getenv("SALES_SNAPSHOT_PATH")
     path = Path(configured_path) if configured_path else None
-    store = RecommendationStore(db_path or os.getenv("COPILOT_DB_PATH", ".local/sales.sqlite"))
+    database_path = db_path or os.getenv("COPILOT_DB_PATH", ".local/sales.sqlite")
+    store = RecommendationStore(database_path)
     health = {"analysis_status": "not_run", "snapshot_id": None}
     scan_lock = Lock()
 
@@ -70,6 +72,20 @@ def create_app(
             await asyncio.sleep(interval)
             try:
                 await asyncio.to_thread(scan)
+                # After the first explicit analysis, new synthetic sources can be
+                # analyzed in the background. No external action is ever executed.
+                state = workspace.state()
+                if state.get("revision") and state["revision"] != workspace.revision(
+                    workspace.sources()
+                ):
+                    await asyncio.to_thread(
+                        workspace.run,
+                        Reviewer(
+                            "demo-background",
+                            "operator",
+                            tuple(b.id for b in workspace.base.operations.branches),
+                        ),
+                    )
             except Exception:
                 health["analysis_status"] = "analysis_failed"
 
@@ -92,7 +108,10 @@ def create_app(
         title="Sales Coworker — Back Office",
         version="0.1.0",
         lifespan=lifespan,
-        description="Análisis sintético para primera línea. Sin ejecución externa ni LLM.",
+        description=(
+            "Fuentes sintéticas, interpretación opcional con Bedrock y revisión humana. "
+            "Sin ejecución comercial."
+        ),
     )
     bearer = HTTPBearer(auto_error=False)
 
@@ -157,4 +176,5 @@ def create_app(
             raise DomainError("permission_denied", 403)
         return store.decide(identifier, body.decision, actor, snapshot())
 
+    workspace = install_sales_routes(app, identity, database_path, Decision)
     return app

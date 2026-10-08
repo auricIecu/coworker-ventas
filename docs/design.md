@@ -11,9 +11,10 @@ Observar y analizar automáticamente; exigir decisión humana para cualquier eje
 Se añade una capa sobre los sistemas existentes (SAP, Big Data, Airflow); sus conectores
 quedan pendientes y ningún acceso está supuesto.
 
-Un servicio FastAPI, un snapshot JSON sintético y una bandeja SQLite son suficientes para
-demostrar el flujo. El análisis determinista hace reproducibles las cifras; un futuro LLM
-podrá extraer intenciones y redactar explicaciones, sin calcular stock ni autorizar acciones.
+Un servicio FastAPI, fuentes JSON sintéticas y una bandeja SQLite demuestran el flujo.
+Bedrock extrae intenciones y consulta documentos; la simulación offline está etiquetada
+por separado. El análisis determinista hace reproducibles las cifras. El modelo no calcula
+stock ni autoriza acciones. Las abstenciones descartan toda atribución a SKU o sucursal.
 
 Cada propuesta identifica producto, sucursal, corte de datos, tipo, evidencia y prioridad.
 La cantidad de reposición es una heurística explícita; una propuesta de promoción no incluye
@@ -35,6 +36,6 @@ a disponibilidad verificada; con stock bajo exige antes reabastecimiento. La apr
 
 ## Producto pendiente
 
-Interfaz operativa, extracción de señales con IA, conectores autorizados, autenticación real,
-manejo de cobertura parcial por fuente y ejecutor con reconciliación.
+Conectores autorizados, autenticación real, manejo de cobertura parcial por fuente,
+evaluación reservada del modelo y ejecutor con reconciliación.
 La demo local no certifica seguridad multiempresa, calidad de un LLM ni viabilidad comercial.

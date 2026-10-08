@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Sales Coworker · Decisiones con evidencia</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Ir al contenido</a>
+    <header class="app-header">
+      <a class="brand" href="/" aria-label="Sales Coworker, inicio"><span class="brand-mark" aria-hidden="true">sc</span><span>Sales Coworker<small>Decisiones con evidencia</small></span></a>
+      <div class="profile-field"><label for="profile">Perfil de la demo</label><select id="profile"><option value="demo-jefe-zona">Jefe de zona · Guayaquil</option><option value="demo-encargado">Encargado · Centro</option><option value="demo-encargado-quito">Encargado · Quito</option><option value="demo-viewer">Solo lectura · Centro</option></select></div>
+    </header>
+    <div class="demo-strip"><span class="demo-tag">Demo sintética</span><span>Las aprobaciones registran intención. No se realizan compras ni se publican promociones.</span></div>
+    <main id="main" tabindex="-1">
+      <section class="workspace-heading" aria-labelledby="page-title"><div><h1 id="page-title">Mesa de decisiones</h1><p id="scope">Consultas, operaciones y documentos en un solo contexto.</p></div><div class="workspace-actions"><button id="refresh" class="quiet">Actualizar</button><button id="burst" class="secondary">Simular 6 consultas</button><button id="analyze" class="primary">Analizar fuentes</button></div></section>
+      <section class="analysis-strip" aria-label="Estado del análisis"><div><span class="status-dot" aria-hidden="true"></span><strong id="engine">Conectando…</strong><span id="analysis-state">Consultando la bandeja</span></div><p id="cutoff">El corte de las fuentes aparecerá aquí.</p></section>
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+      <div id="error" class="notice error" role="alert" hidden></div>
+      <nav class="main-nav" aria-label="Área de trabajo"><button id="nav-inbox" class="nav-button" aria-current="page" data-view="inbox">Bandeja <span id="inbox-count" class="count">0</span></button><button id="nav-sources" class="nav-button" data-view="sources">Explorar fuentes <span id="sources-count" class="count">0</span></button></nav>
+      <section id="inbox-view" aria-label="Bandeja de recomendaciones">
+        <div class="inbox-layout"><aside class="queue" aria-label="Lista de recomendaciones"><div class="queue-heading"><h2>Recomendaciones</h2><div class="filter-group" aria-label="Filtrar recomendaciones"><button id="filter-pending" aria-pressed="true" data-filter="pending">Pendientes</button><button id="filter-history" aria-pressed="false" data-filter="history">Historial</button></div></div><div id="recommendation-list" class="recommendation-list"><div class="loading-placeholder" aria-label="Cargando recomendaciones"><span></span><span></span><span></span></div></div></aside><article id="recommendation-detail" class="recommendation-detail" aria-label="Detalle de la recomendación"><div class="empty-state"><h2>Preparando tu mesa de decisiones</h2><p>Cargando las fuentes y las recomendaciones disponibles para este perfil.</p></div></article></div>
+      </section>
+      <section id="sources-view" aria-labelledby="sources-title" hidden><div class="source-heading"><div><h2 id="sources-title">Fuentes del análisis</h2><p>Revisa el contenido original y su fecha antes de decidir.</p></div><div class="search-field"><label for="source-search">Buscar en las fuentes</label><input id="source-search" type="search" placeholder="Producto, sucursal o texto…"></div></div><div id="source-tabs" class="source-tabs" aria-label="Tipo de fuente"><button data-source="conversations" aria-pressed="true">Conversaciones</button><button data-source="movements" aria-pressed="false">Movimientos</button><button data-source="stock" aria-pressed="false">Inventario</button><button data-source="documents" aria-pressed="false">Documentos</button></div><div id="source-content"></div></section>
+      <footer class="workspace-footer"><span>Contexto verificable. Decisión humana.</span><span id="run-info">Sin análisis ejecutado en esta sesión.</span></footer>
+    </main>
+    <dialog id="decision-dialog" aria-labelledby="decision-title" aria-describedby="decision-description"><form method="dialog"><div class="dialog-heading"><span class="demo-tag">Confirmación humana</span><button class="icon-button" value="cancel" aria-label="Cerrar confirmación">×</button></div><h2 id="decision-title">Confirmar decisión</h2><p id="decision-description"></p><p id="decision-target" class="decision-target"></p><p class="muted">Esta demo solo registra tu decisión. No ejecuta pedidos, descuentos ni campañas.</p><div class="dialog-actions"><button value="cancel" class="secondary">Volver a la evidencia</button><button id="confirm-decision" type="button" class="primary">Confirmar</button></div></form></dialog>
+    <noscript>Activa JavaScript para consultar las fuentes y registrar decisiones en esta demo.</noscript>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+{
+  "synthetic": true,
+  "as_of": "2026-10-08T14:00:00Z",
+  "coverage_start": "2026-09-24T14:00:00Z",
+  "window_days": 7,
+  "products": [
+    {
+      "sku": "SC-001",
+      "title": "Vitamina C 500 mg · 30 tabletas"
+    },
+    {
+      "sku": "SC-002",
+      "title": "Jabón demo 100 g"
+    },
+    {
+      "sku": "SC-003",
+      "title": "Pañuelos demo 100 unidades"
+    },
+    {
+      "sku": "SC-004",
+      "title": "Vitamina C 1 g · 10 efervescentes"
+    }
+  ],
+  "branches": [
+    {
+      "id": "gye-centro-demo",
+      "city": "Guayaquil"
+    },
+    {
+      "id": "gye-norte-demo",
+      "city": "Guayaquil"
+    },
+    {
+      "id": "uio-demo",
+      "city": "Quito"
+    }
+  ],
+  "signals": [],
+  "movements": [
+    {
+      "id": "sale-SC-001",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 560
+    },
+    {
+      "id": "sale-SC-002",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 14
+    },
+    {
+      "id": "sale-SC-003",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 14
+    },
+    {
+      "id": "sale-gye-norte-demo",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 35
+    },
+    {
+      "id": "sale-uio-demo",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2026-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 35
+    },
+    {
+      "id": "receipt-demo-001",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-05T10:00:00Z",
+      "kind": "receipt",
+      "units": 120
+    },
+    {
+      "id": "adjustment-demo-001",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2026-10-05T11:00:00Z",
+      "kind": "adjustment",
+      "units": 5
+    }
+  ],
+  "stock": [
+    {
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 180,
+      "target_units": 680,
+      "reference_units": 1000
+    },
+    {
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 80,
+      "target_units": 100,
+      "reference_units": 100
+    },
+    {
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 80,
+      "target_units": 100,
+      "reference_units": 100
+    },
+    {
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 80,
+      "reference_units": 100,
+      "target_units": 100
+    },
+    {
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 20,
+      "reference_units": 100,
+      "target_units": 100
+    },
+    {
+      "sku": "SC-004",
+      "branch_id": "gye-centro-demo",
+      "observed_at": "2026-10-08T13:55:00Z",
+      "available_units": 100,
+      "reference_units": 100,
+      "target_units": 100
+    }
+  ],
+  "promotions": [
+    {
+      "id": "promo-demo-001",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "starts_at": "2026-10-01T14:00:00Z",
+      "ends_at": "2026-10-15T14:00:00Z",
+      "enabled": true
+    }
+  ]
+}

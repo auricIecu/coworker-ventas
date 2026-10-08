@@ -1,6 +1,7 @@
 # Contratos para futuras integraciones
 
-La demo acepta solamente snapshots sintéticos. Ningún conector real está incluido.
+La demo acepta solamente fuentes sintéticas. Incluye Amazon Bedrock como proveedor de IA;
+no incluye conectores empresariales ni ejecutores comerciales.
 Los siguientes son requisitos de integración, no capacidades que se activen con una API key.
 
 ## Encaje con sistemas existentes
@@ -13,8 +14,8 @@ La demo no certifica acceso, compatibilidad ni conexión a esas plataformas.
 ## Conversaciones
 
 El adaptador autorizado debe producir señal con ID, ID pseudónimo de conversación,
-fecha, SKU y sucursal. La demo usa mensajes ficticios ya etiquetados.
-La extracción futura debe poder abstenerse si el producto o localidad es ambiguo.
+fecha y sucursal autorizada. La bandeja usa mensajes ficticios interpretados por Bedrock
+o simulación offline explícita, y se abstiene si producto o sucursal son ambiguos.
 No inferir una sucursal a partir de un teléfono ni convertir preguntas clínicas en recomendaciones.
 
 Los mensajes son datos no confiables. No pueden elegir herramientas, permisos, destinos

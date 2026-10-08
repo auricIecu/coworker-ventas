@@ -1,0 +1,138 @@
+{
+  "synthetic": true,
+  "documents": [
+    {
+      "id": "PROC-REPLENISH",
+      "title": "Procedimiento ficticio de revisión de abastecimiento",
+      "kind": "procedure",
+      "branch_ids": [
+        "gye-centro-demo",
+        "gye-norte-demo",
+        "uio-demo"
+      ],
+      "skus": [
+        "SC-001",
+        "SC-002",
+        "SC-003",
+        "SC-004"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-10-31T23:59:59Z",
+      "body": "Documento ficticio exclusivo para la demo; no representa procedimientos de una empresa real. Antes de reponer, revisar la cantidad propuesta, el plazo de entrega y el proveedor. La compra requiere aprobación expresa del encargado de la sucursal. Una recomendación o una conversación no constituye una orden de compra ni autoriza su ejecución.",
+      "conditions": {
+        "requires_stock": false,
+        "max_duration_days": null,
+        "required_approvals": [
+          "encargado"
+        ]
+      }
+    },
+    {
+      "id": "DOC-CAMPAIGN-GYE",
+      "title": "Campaña ficticia local de Guayaquil",
+      "kind": "promotion",
+      "branch_ids": [
+        "gye-centro-demo",
+        "gye-norte-demo"
+      ],
+      "skus": [
+        "SC-001",
+        "SC-002"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-10-31T23:59:59Z",
+      "body": "Reglas ficticias de demo para las sucursales Centro y Norte de Guayaquil. La campaña puede durar como máximo 7 días y requiere stock disponible y revalidado. Antes de activarla, revisar el descuento, el presupuesto y obtener aprobación del encargado. Si falta stock, primero resolver el abastecimiento. Este documento no fija un porcentaje de descuento ni autoriza gastos.",
+      "conditions": {
+        "requires_stock": true,
+        "max_duration_days": 7,
+        "required_approvals": [
+          "encargado"
+        ]
+      }
+    },
+    {
+      "id": "DOC-CAMPAIGN-UIO",
+      "title": "Campaña ficticia local de Quito",
+      "kind": "promotion",
+      "branch_ids": [
+        "uio-demo"
+      ],
+      "skus": [
+        "SC-001"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-10-31T23:59:59Z",
+      "body": "Reglas ficticias de demo para vitamina C 500 mg de 30 tabletas en Quito. La campaña puede durar como máximo 3 días y requiere stock disponible y revalidado. Revisar descuento y presupuesto y obtener aprobación del encargado antes de activarla. No extender a Quito la duración de las campañas de Guayaquil.",
+      "conditions": {
+        "requires_stock": true,
+        "max_duration_days": 3,
+        "required_approvals": [
+          "encargado"
+        ]
+      }
+    },
+    {
+      "id": "DOC-LOYALTY-SOAP",
+      "title": "Condiciones ficticias SmartClub para jabón",
+      "kind": "promotion",
+      "branch_ids": [
+        "gye-centro-demo"
+      ],
+      "skus": [
+        "SC-002"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-10-31T23:59:59Z",
+      "body": "Documento ficticio de demo: SmartClub es un programa simulado sin relación con condiciones comerciales reales. Solo aplica al jabón demo de 100 g en Guayaquil Centro durante un máximo de 7 días. Requiere stock disponible, confirmar la elegibilidad del cliente para el programa ficticio y revisar descuento y presupuesto. Los beneficios no se acumulan con otras promociones. Obtener aprobación del encargado; no hay descuento preaprobado ni se requieren datos personales en esta demo.",
+      "conditions": {
+        "requires_stock": true,
+        "max_duration_days": 7,
+        "required_approvals": [
+          "encargado"
+        ]
+      }
+    },
+    {
+      "id": "DOC-EXPIRED-SC001",
+      "title": "Campaña ficticia vencida de vitamina C",
+      "kind": "promotion",
+      "branch_ids": [
+        "gye-centro-demo"
+      ],
+      "skus": [
+        "SC-001"
+      ],
+      "valid_from": "2026-09-01T00:00:00Z",
+      "valid_until": "2026-09-30T23:59:59Z",
+      "body": "Documento ficticio de demo vencido el 30 de septiembre de 2026. Se conserva únicamente como referencia histórica y prueba de filtrado; nunca debe citarse como promoción vigente ni usarse para autorizar una campaña actual. Las condiciones históricas exigían stock y aprobación del encargado.",
+      "conditions": {
+        "requires_stock": true,
+        "max_duration_days": 7,
+        "required_approvals": [
+          "encargado"
+        ]
+      }
+    },
+    {
+      "id": "DOC-OUT-OF-SCOPE",
+      "title": "Campaña ficticia para otra presentación en Quito",
+      "kind": "promotion",
+      "branch_ids": [
+        "uio-demo"
+      ],
+      "skus": [
+        "SC-004"
+      ],
+      "valid_from": "2026-10-01T00:00:00Z",
+      "valid_until": "2026-10-31T23:59:59Z",
+      "body": "Documento ficticio de demo aplicable exclusivamente a vitamina C de 1 g, presentación de 10 efervescentes, en Quito. No aplica a vitamina C de 500 mg de 30 tabletas ni a Guayaquil. Requiere comprobar stock, revisar descuento y presupuesto y obtener aprobación del encargado. Su presencia no acredita inventario disponible para esta combinación.",
+      "conditions": {
+        "requires_stock": true,
+        "max_duration_days": 3,
+        "required_approvals": [
+          "encargado"
+        ]
+      }
+    }
+  ]
+}

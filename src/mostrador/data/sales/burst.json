@@ -1,0 +1,101 @@
+{
+  "synthetic": true,
+  "conversations": [
+    {
+      "id": "burst-001",
+      "branch_id": "gye-centro-demo",
+      "channel": "whatsapp",
+      "occurred_at": "2026-10-08T13:00:00Z",
+      "messages": [
+        {
+          "role": "customer",
+          "text": "Hola, ¿tienen vitamina C de 500 mg en caja de 30 tabletas?"
+        },
+        {
+          "role": "staff",
+          "text": "Voy a revisar la disponibilidad de esa presentación."
+        }
+      ]
+    },
+    {
+      "id": "burst-002",
+      "branch_id": "gye-centro-demo",
+      "channel": "web",
+      "occurred_at": "2026-10-08T13:05:00Z",
+      "messages": [
+        {
+          "role": "customer",
+          "text": "Quisiera consultar el precio de la vitamina C, presentación 500 mg y 30 tabletas."
+        },
+        {
+          "role": "staff",
+          "text": "Revisaré el precio y las existencias para confirmarte."
+        }
+      ]
+    },
+    {
+      "id": "burst-003",
+      "branch_id": "gye-centro-demo",
+      "channel": "store",
+      "occurred_at": "2026-10-08T13:10:00Z",
+      "messages": [
+        {
+          "role": "customer",
+          "text": "¿Hay disponibilidad de vitamina C de quinientos miligramos, caja de treinta tabletas?"
+        },
+        {
+          "role": "staff",
+          "text": "Gracias por precisar la presentación; voy a comprobarla."
+        }
+      ]
+    },
+    {
+      "id": "burst-004",
+      "branch_id": "gye-centro-demo",
+      "channel": "whatsapp",
+      "occurred_at": "2026-10-08T13:15:00Z",
+      "messages": [
+        {
+          "role": "customer",
+          "text": "Busco la vitamina C de 500 mg, la de 30 tabletas. ¿La puedo comprar aquí?"
+        },
+        {
+          "role": "staff",
+          "text": "Voy a revisar la disponibilidad de esa presentación."
+        }
+      ]
+    },
+    {
+      "id": "burst-005",
+      "branch_id": "gye-centro-demo",
+      "channel": "web",
+      "occurred_at": "2026-10-08T13:20:00Z",
+      "messages": [
+        {
+          "role": "customer",
+          "text": "¿Me confirman si tienen la presentación de treinta tabletas de vitamina C de 500 mg?"
+        },
+        {
+          "role": "staff",
+          "text": "Revisaré el precio y las existencias para confirmarte."
+        }
+      ]
+    },
+    {
+      "id": "burst-006",
+      "branch_id": "gye-centro-demo",
+      "channel": "store",
+      "occurred_at": "2026-10-08T13:25:00Z",
+      "messages": [
+        {
+          "role": "customer",
+          "text": "Quiero saber cuánto cuesta la vitamina C de 500 miligramos en envase de 30 tabletas."
+        },
+        {
+          "role": "staff",
+          "text": "Gracias por precisar la presentación; voy a comprobarla."
+        }
+      ]
+    }
+  ]
+}

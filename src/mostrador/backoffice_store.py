@@ -63,8 +63,10 @@ class RecommendationStore:
             (identifier, kind, actor, now),
         )
 
-    def record(self, snapshot: Snapshot) -> list[dict]:
-        proposals, now = analyze(snapshot), int(self.clock())
+    def record(
+        self, snapshot: Snapshot, *, proposals: list[dict] | None = None, renew_expired=False
+    ) -> list[dict]:
+        proposals, now = analyze(snapshot) if proposals is None else proposals, int(self.clock())
         fingerprint = snapshot.fingerprint()
         with self.connect() as db:
             outdated = db.execute(
@@ -83,6 +85,14 @@ class RecommendationStore:
                 )
                 if inserted.rowcount:
                     self.event(db, proposal["id"], "proposed", "analyst-demo", now)
+                elif renew_expired:
+                    renewed = db.execute(
+                        "UPDATE recommendations SET expires_at = ?, payload = ? "
+                        "WHERE id = ? AND status = 'pending' AND expires_at <= ?",
+                        (now + 900, json.dumps(proposal), proposal["id"], now),
+                    )
+                    if renewed.rowcount:
+                        self.event(db, proposal["id"], "revalidated", "analyst-demo", now)
             return [
                 self.decode(
                     db.execute("SELECT * FROM recommendations WHERE id = ?", (p["id"],)).fetchone()
