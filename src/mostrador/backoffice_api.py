@@ -12,6 +12,8 @@ from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict
 
+from mostrador.agents.auditor import InsightStore
+from mostrador.agents_api import create_agents_router
 from mostrador.backoffice import Reviewer, Snapshot, load_demo
 from mostrador.backoffice_store import RecommendationStore
 from mostrador.domain import DomainError
@@ -177,4 +179,10 @@ def create_app(
         return store.decide(identifier, body.decision, actor, snapshot())
 
     workspace = install_sales_routes(app, identity, database_path, Decision)
+
+    # --- Agent HQ routes ---
+    insight_store = InsightStore(database_path.replace(".sqlite", "_insights.sqlite"))
+    agents_router = create_agents_router(identity, insight_store)
+    app.include_router(agents_router)
+
     return app

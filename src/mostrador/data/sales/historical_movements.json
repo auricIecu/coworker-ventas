@@ -1,0 +1,54 @@
+{
+  "synthetic": true,
+  "description": "Movimientos historicos sinteticos del ano anterior (oct 2025) para comparacion estacional. No representan datos reales.",
+  "movements": [
+    {
+      "id": "hist-sale-SC-001-gye-centro-2025-01",
+      "sku": "SC-001",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2025-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 210
+    },
+    {
+      "id": "hist-sale-SC-001-gye-norte-2025-01",
+      "sku": "SC-001",
+      "branch_id": "gye-norte-demo",
+      "occurred_at": "2025-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 18
+    },
+    {
+      "id": "hist-sale-SC-001-uio-2025-01",
+      "sku": "SC-001",
+      "branch_id": "uio-demo",
+      "occurred_at": "2025-10-06T12:00:00Z",
+      "kind": "sale",
+      "units": 18
+    },
+    {
+      "id": "hist-sale-SC-002-gye-centro-2025-01",
+      "sku": "SC-002",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2025-10-05T12:00:00Z",
+      "kind": "sale",
+      "units": 9
+    },
+    {
+      "id": "hist-sale-SC-003-gye-centro-2025-01",
+      "sku": "SC-003",
+      "branch_id": "gye-centro-demo",
+      "occurred_at": "2025-10-05T12:00:00Z",
+      "kind": "sale",
+      "units": 9
+    },
+    {
+      "id": "hist-sale-SC-003-uio-2025-01",
+      "sku": "SC-003",
+      "branch_id": "uio-demo",
+      "occurred_at": "2025-10-05T12:00:00Z",
+      "kind": "sale",
+      "units": 12
+    }
+  ]
+}

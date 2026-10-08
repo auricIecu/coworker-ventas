@@ -1,0 +1,71 @@
+{
+  "synthetic": true,
+  "description": "Seed de perfiles de clientes sinteticos para la demo de agentes. No contiene datos reales de personas.",
+  "as_of": "2026-10-08T14:00:00Z",
+  "customers": [
+    {
+      "customer_id": "cust-anon-001",
+      "branch_ids": ["gye-centro-demo"],
+      "preferred_channel": "whatsapp",
+      "signals": [
+        { "sku": "SC-001", "occurred_at": "2026-10-02T10:00:00Z" },
+        { "sku": "SC-001", "occurred_at": "2026-10-05T11:00:00Z" }
+      ],
+      "purchases": [
+        { "sku": "SC-001", "units": 2, "occurred_at": "2025-10-08T10:00:00Z" },
+        { "sku": "SC-001", "units": 3, "occurred_at": "2026-10-06T10:00:00Z" }
+      ]
+    },
+    {
+      "customer_id": "cust-anon-002",
+      "branch_ids": ["gye-centro-demo"],
+      "preferred_channel": "web",
+      "signals": [
+        { "sku": "SC-001", "occurred_at": "2026-09-28T12:00:00Z" },
+        { "sku": "SC-001", "occurred_at": "2026-10-03T09:00:00Z" }
+      ],
+      "purchases": [
+        { "sku": "SC-001", "units": 2, "occurred_at": "2025-10-05T12:00:00Z" },
+        { "sku": "SC-001", "units": 1, "occurred_at": "2026-10-04T12:00:00Z" }
+      ]
+    },
+    {
+      "customer_id": "cust-anon-003",
+      "branch_ids": ["gye-centro-demo"],
+      "preferred_channel": "store",
+      "signals": [
+        { "sku": "SC-002", "occurred_at": "2026-09-30T14:00:00Z" },
+        { "sku": "SC-002", "occurred_at": "2026-10-06T10:00:00Z" }
+      ],
+      "purchases": [
+        { "sku": "SC-002", "units": 3, "occurred_at": "2025-10-01T14:00:00Z" },
+        { "sku": "SC-002", "units": 2, "occurred_at": "2026-10-06T14:00:00Z" }
+      ]
+    },
+    {
+      "customer_id": "cust-anon-004",
+      "branch_ids": ["gye-norte-demo"],
+      "preferred_channel": "whatsapp",
+      "signals": [
+        { "sku": "SC-001", "occurred_at": "2026-10-01T09:00:00Z" }
+      ],
+      "purchases": [
+        { "sku": "SC-001", "units": 1, "occurred_at": "2025-10-10T09:00:00Z" },
+        { "sku": "SC-001", "units": 2, "occurred_at": "2026-10-06T09:00:00Z" }
+      ]
+    },
+    {
+      "customer_id": "cust-anon-005",
+      "branch_ids": ["uio-demo"],
+      "preferred_channel": "web",
+      "signals": [
+        { "sku": "SC-003", "occurred_at": "2026-10-04T16:00:00Z" },
+        { "sku": "SC-003", "occurred_at": "2026-10-07T15:00:00Z" }
+      ],
+      "purchases": [
+        { "sku": "SC-003", "units": 2, "occurred_at": "2025-10-03T16:00:00Z" },
+        { "sku": "SC-003", "units": 2, "occurred_at": "2026-10-07T16:00:00Z" }
+      ]
+    }
+  ]
+}
