@@ -5,6 +5,8 @@ import os
 import time
 from threading import Lock
 
+from botocore.exceptions import ConnectTimeoutError, ReadTimeoutError
+
 from mostrador.domain import DomainError
 
 SYSTEM = """Interpreta fuentes SINTÉTICAS para un analista comercial. No ejecutes acciones.
@@ -77,7 +79,9 @@ class BedrockInterpreter:
                 )
             except Exception as error:
                 # Never forward SDK internals, credentials or source bodies to the client.
-                code = getattr(error, "response", {}).get("Error", {}).get("Code", "")
+                if isinstance(error, (ConnectTimeoutError, ReadTimeoutError)):
+                    raise DomainError("bedrock_timeout", 503) from None
+                code = (getattr(error, "response", None) or {}).get("Error", {}).get("Code", "")
                 public = (
                     "aws_session_expired"
                     if code in {"ExpiredTokenException", "ExpiredToken"}

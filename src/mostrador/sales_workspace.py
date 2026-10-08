@@ -185,9 +185,20 @@ class SalesWorkspace:
         for offset in range(0, len(missing), 8):
             batch = missing[offset : offset + 8]
             payload = {**context, "conversations": [c.model_dump(mode="json") for _, c in batch]}
-            reply = self.interpreter.infer(payload)
-            calls += 1
-            parsed = validate_interpretations(reply, [c for _, c in batch], sources)
+            # Retry only invalid Bedrock output, including invalid source references.
+            for attempt in range(2):
+                try:
+                    calls += 1
+                    reply = self.interpreter.infer(payload)
+                    parsed = validate_interpretations(reply, [c for _, c in batch], sources)
+                    break
+                except DomainError as error:
+                    if (
+                        self.interpreter.mode != "bedrock"
+                        or error.code != "model_invalid_response"
+                        or attempt == 1
+                    ):
+                        raise
             keys = {c.id: key for key, c in batch}
             with self.store.connect() as db:
                 for row in parsed:

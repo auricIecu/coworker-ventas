@@ -36,13 +36,14 @@
     analysis_failed: "No se pudo completar el análisis. Revisa la conexión y vuelve a analizar.",
     source_unavailable: "No se pudieron leer las fuentes. Actualiza la bandeja para reintentar.",
     bedrock_unavailable: "Bedrock no está disponible. Revisa su configuración y vuelve a analizar.",
+    bedrock_timeout: "Bedrock tardó demasiado. No se completó el análisis. Puedes volver a analizar o usar la demo de respaldo offline.",
     bedrock_invalid_response: "Bedrock devolvió un análisis no válido. No se incorporó a la bandeja.",
     missing_required_approvals: "Faltan aprobaciones requeridas. La intención no se registró.",
     recommendation_blocked: "La propuesta tiene condiciones pendientes. Revisa los bloqueos antes de aprobar.",
     request_timeout: "La solicitud tardó demasiado. Actualiza la bandeja para comprobar el resultado antes de reintentar.",
     network_error: "No se pudo conectar con la demo. Comprueba que el servidor esté disponible y pulsa Actualizar.",
     aws_session_expired: "La sesión de AWS venció. Renueva la sesión en el servidor antes de volver a analizar.",
-    model_invalid_response: "El modelo devolvió un análisis no válido. No se incorporó a la bandeja.",
+    model_invalid_response: "Bedrock devolvió una respuesta inválida también en el único reintento. No se incorporó a la bandeja. Puedes usar la demo de respaldo offline.",
     analysis_required: "Se necesita un análisis válido antes de aprobar. Pulsa Analizar fuentes.",
     analysis_in_progress: "Ya hay un análisis en curso. Espera y actualiza la bandeja para comprobar el resultado.",
     missing_required_context: "Falta contexto obligatorio. Revisa las condiciones que bloquean la aprobación.",
@@ -175,7 +176,7 @@
     const w = state.workspace;
     if (!w) return;
     $("scope").textContent = `${w.actor.role === "viewer" ? "Solo lectura" : "Revisión comercial"} · ${w.branches.map(item => branchName(item.id)).join(" / ")}`;
-    $("engine").textContent = w.mode === "bedrock" ? "IA · Amazon Bedrock" : "Modo offline · Sin IA remota";
+    $("engine").textContent = w.mode === "bedrock" ? "IA · Amazon Bedrock" : "Respaldo offline · Simulación local sin IA";
     $("engine").title = w.model_id || "Interpretación de demo sin llamadas al modelo";
     const fresh = !!w.analyzed_revision && w.source_revision === w.analyzed_revision && w.analysis_status === "ready";
     $("analysis-state").textContent = w.analysis_status === "analysis_failed" ? "Falló el último análisis · requiere revisión" : fresh ? "Fuentes analizadas" : w.analyzed_revision ? "Fuentes cambiaron · requiere análisis" : "Fuentes listas · sin analizar";

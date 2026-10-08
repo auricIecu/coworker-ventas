@@ -39,6 +39,9 @@ El perfil temporal debe existir fuera del proyecto. Modelo predeterminado:
 `amazon.nova-lite-v1:0`, configurable mediante `SALES_BEDROCK_MODEL`.
 Si AWS falla no se sustituye silenciosamente por resultados locales. Una instancia,
 un worker, llamadas serializadas con separación mínima de 1,05 segundos y sin reintentos SDK.
+Cada lote admite **un único reintento** si la respuesta del modelo es inválida (JSON,
+formato o referencias). Un timeout devuelve `503 bedrock_timeout`; los errores de red,
+credenciales y disponibilidad no se reintentan automáticamente.
 
 Pulsa **Analizar fuentes** para el primer análisis. Para detectar posteriormente nuevas
 conversaciones sintéticas en segundo plano:
@@ -60,6 +63,11 @@ API histórica. Para una sesión nueva, usa otra ruta. Reiniciar conserva fuente
 `.env.example` documenta variables y no se carga automáticamente.
 
 ## Recorrido de demo
+
+[Guion de presentación y respaldo offline](docs/demo.md), con arranque en sesiones
+separadas, resultados esperados y recuperación ante errores.
+[Evaluación de 12 casos con Service Judge](docs/evaluations/2026-10-08-demo/README.md):
+8/12 interpretaciones finales correctas; cuatro falsas abstenciones pendientes.
 
 1. **Analizar fuentes**: interpreta 40 conversaciones y consulta documentos comerciales.
 2. **Simular 6 consultas**: añade interés por Vitamina C en Guayaquil Centro, una sola vez.

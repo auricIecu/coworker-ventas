@@ -1,12 +1,83 @@
+import json
+
 import pytest
 
 from mostrador.backoffice import Reviewer
+from mostrador.bedrock import BedrockInterpreter
 from mostrador.domain import DomainError
 from mostrador.sales_context import load_sources
 from mostrador.sales_workspace import OfflineInterpreter, SalesWorkspace, validate_interpretations
 
 ACTOR = Reviewer("demo-jefe-zona", "operator", ("gye-centro-demo", "gye-norte-demo"))
 QUITO = Reviewer("demo-encargado-quito", "operator", ("uio-demo",))
+
+
+class InvalidThenValidClient:
+    def __init__(self, invalid_count, kind):
+        self.invalid_count, self.kind = invalid_count, kind
+        self.calls = 0
+
+    def converse(self, **kwargs):
+        self.calls += 1
+        payload = json.loads(kwargs["messages"][0]["content"][0]["text"])
+        reply = OfflineInterpreter().infer(payload)
+        text = json.dumps(reply)
+        if self.calls <= self.invalid_count:
+            if self.kind == "json":
+                text = "not JSON"
+            elif self.kind == "references":
+                reply["items"][0]["document_ids"] = ["invented-document"]
+                text = json.dumps(reply)
+        return {
+            "stopReason": "end_turn",
+            "output": {"message": {"content": [{"text": text}]}},
+        }
+
+
+@pytest.mark.parametrize("kind", ["json", "references"])
+def test_invalid_bedrock_batch_gets_one_retry_before_caching(tmp_path, kind):
+    client = InvalidThenValidClient(1, kind)
+    interpreter = BedrockInterpreter(client=client, sleep=lambda _: None)
+    ws = SalesWorkspace(str(tmp_path / "retry.sqlite"), interpreter=interpreter)
+    result = ws.run(ACTOR)
+    assert result["analysis_status"] == "ready"
+    assert result["last_run"]["model_calls"] == 6  # Five batches plus one retry.
+    proposal = next(r for r in result["recommendations"] if r["sku"] == "SC-001")
+    assert proposal["suggested_units"] == 500
+    assert ws.run(ACTOR)["last_run"]["model_calls"] == 0
+    assert client.calls == 6
+
+
+@pytest.mark.parametrize("kind", ["json", "references"])
+def test_two_invalid_bedrock_replies_stop_without_caching_or_fallback(tmp_path, kind):
+    client = InvalidThenValidClient(2, kind)
+    interpreter = BedrockInterpreter(client=client, sleep=lambda _: None)
+    ws = SalesWorkspace(str(tmp_path / "invalid.sqlite"), interpreter=interpreter)
+    with pytest.raises(DomainError, match="^model_invalid_response$"):
+        ws.run(ACTOR)
+    assert client.calls == 2
+    assert ws.view(ACTOR)["recommendations"] == []
+    assert ws.view(ACTOR)["mode"] == "bedrock"
+    assert ws.state()["status"] == "analysis_failed"
+    with ws.store.connect() as db:
+        assert db.execute("SELECT COUNT(*) FROM interpretation_cache").fetchone()[0] == 0
+    assert ws.run(ACTOR)["analysis_status"] == "ready"
+
+
+@pytest.mark.parametrize("code", ["bedrock_unavailable", "aws_session_expired"])
+def test_bedrock_service_errors_are_not_retried(tmp_path, code):
+    class UnavailableInterpreter:
+        mode, model_id, calls = "bedrock", "test-model", 0
+
+        def infer(self, payload):
+            self.calls += 1
+            raise DomainError(code, 503)
+
+    interpreter = UnavailableInterpreter()
+    ws = SalesWorkspace(str(tmp_path / "unavailable.sqlite"), interpreter=interpreter)
+    with pytest.raises(DomainError, match=f"^{code}$"):
+        ws.run(ACTOR)
+    assert interpreter.calls == 1
 
 
 def test_conversations_to_grounded_recommendations_and_human_decision(tmp_path):
