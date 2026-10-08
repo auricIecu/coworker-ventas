@@ -19,9 +19,12 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sqlite3
 import time
-from dataclasses import asdict, dataclass, field
+from contextlib import contextmanager
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Literal
 
 from mostrador.agents.profiler import CustomerProfile
@@ -75,10 +78,6 @@ class AuditInsight:
 # ---------------------------------------------------------------------------
 # Insight store (thin SQLite wrapper)
 # ---------------------------------------------------------------------------
-
-import sqlite3
-from contextlib import contextmanager
-from pathlib import Path
 
 
 class InsightStore:

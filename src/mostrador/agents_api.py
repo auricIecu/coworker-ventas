@@ -24,6 +24,7 @@ scheme as the rest of the back office.
 from __future__ import annotations
 
 import json
+from dataclasses import asdict
 from importlib.resources import files
 from typing import Annotated, Literal
 
@@ -31,7 +32,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, ConfigDict
 
 from mostrador.agents.auditor import Auditor, InsightStore
-from mostrador.agents.profiler import CustomerProfile, CustomerProfiler, profiles_to_dict
+from mostrador.agents.profiler import CustomerProfile, CustomerProfiler
 from mostrador.agents.stock_observer import StockObserver
 from mostrador.domain import DomainError
 
@@ -199,7 +200,6 @@ def _authorize(insight: dict, actor) -> None:
 
 
 def _insight_dict(insight) -> dict:
-    from dataclasses import asdict
     return asdict(insight)
 
 
